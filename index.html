@@ -476,7 +476,8 @@
   </div>
 
   <script>
-    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbznOWAaQnq5EblkczTCXOo2YLuBHVaMx5tz7NtXrtpUJCkFIY8hUPswcWdhmBHJ-MEPHw/exec";
+    // URL Google Apps Script Anda
+    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbznOWAaQnq5EblkczTXO02yLubHVAMx57z7NtXrtpUJCKFIY8hUPswcWdhmBHJ-MEPHw/exec";
     const DB_KEY = "ciracas_sheets_cache_db";
     const CURRENT_ISO_KEY = "ciracas_active_iso_date";
     const ADMIN_PIN = "969798";
@@ -668,10 +669,10 @@
       lucide.createIcons();
     }
 
-    // AUTO-SYNC OTOMATIS DARI GOOGLE SHEETS
+    // AUTO-SYNC DARI GOOGLE APPS SCRIPT
     async function syncFromGoogleSheets() {
       try {
-        const res = await fetch(SHEETDB_URL);
+        const res = await fetch(SHEETDB_URL, { redirect: "follow" });
         const rows = await res.json();
         if (Array.isArray(rows)) {
           const newDb = {};
@@ -700,13 +701,14 @@
           loadDateData(currentISO);
           renderWeeklyPoster();
           renderMonthlyPoster();
+          showToast("Data berhasil disinkronkan ✓");
         }
       } catch (e) {
-        console.error("Gagal auto-sync sheets:", e);
+        console.error("Gagal sync:", e);
       }
     }
 
-    // AUTO-SAVE OTOMATIS KE GOOGLE SHEETS SETIAP ADA PERUBAHAN
+    // AUTO-SAVE KE GOOGLE APPS SCRIPT
     async function autoSaveToSheets() {
       currentAgendas.forEach(a => { if (a.pukul) a.pukul = formatTimeInput(a.pukul); });
       
@@ -715,13 +717,18 @@
       saveDB(db);
 
       try {
-        await fetch(`${SHEETDB_URL}/tanggal/${currentISO}`, { method: "DELETE" });
+        await fetch(SHEETDB_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "DELETE_BY_DATE", tanggal: currentISO })
+        });
+
         for (let item of currentAgendas) {
           if (!item.acara && !item.pukul) continue;
           await fetch(SHEETDB_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
+              action: "APPEND",
+              tanggal: currentISO,
               data: {
                 tanggal: currentISO,
                 pukul: formatTimeInput(item.pukul),
@@ -739,9 +746,9 @@
             })
           });
         }
-        showToast("Tersimpan otomatis ke Cloud ✓");
+        showToast("Tersimpan ke Google Sheets ✓");
       } catch (e) {
-        console.error("Gagal auto-save:", e);
+        console.error("Gagal save:", e);
       }
     }
 
@@ -846,17 +853,6 @@
             <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pendamping</label><input type="text" value="${item.pendamping || '-'}" oninput="currentAgendas[${index}].pendamping = this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
             <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Keterangan</label><input type="text" value="${item.keterangan || '-'}" oninput="currentAgendas[${index}].keterangan = this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
           </div>
-
-          <div class="pt-2 border-t border-slate-100 space-y-2">
-            <span class="block text-[11px] font-bold text-slate-700">Foto Dokumentasi Kegiatan (${(item.photos || []).length}/3):</span>
-            <div class="flex items-center gap-2 flex-wrap">${photosHtml}</div>
-            ${(!item.photos || item.photos.length < 3) ? `
-              <label class="inline-flex items-center gap-1.5 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-2 rounded-xl cursor-pointer shadow-xs">
-                <i data-lucide="camera" class="w-3.5 h-3.5"></i> Upload Foto Dokumentasi
-                <input type="file" accept="image/*" multiple onchange="handlePhotoUpload(${index}, event); setTimeout(() => openAgendaModal(${index}), 400);" class="hidden">
-              </label>
-            ` : ''}
-          </div>
         </div>
       `;
 
@@ -868,60 +864,6 @@
       document.getElementById("agendaModal").classList.add("hidden");
       renderFormList();
       autoSaveToSheets();
-    }
-
-    function handlePhotoUpload(index, event) {
-      const files = event.target.files;
-      if (!files || files.length === 0) return;
-      
-      const agenda = currentAgendas[index];
-      if (!agenda.photos) agenda.photos = [];
-
-      for (let i = 0; i < files.length; i++) {
-        if (agenda.photos.length >= 3) {
-          alert("Maksimal 3 foto dokumentasi per kegiatan.");
-          break;
-        }
-        const file = files[i];
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const img = new Image();
-          img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 600;
-            const MAX_HEIGHT = 600;
-            let width = img.width;
-            let height = img.height;
-
-            if (width > height) {
-              if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-            } else {
-              if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-            }
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-            agenda.photos.push(dataUrl);
-            renderFormList();
-            renderPosterTable();
-            autoSaveToSheets();
-            showToast("Foto berhasil diunggah ✓");
-          };
-          img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function removePhoto(agendaIdx, photoIdx) {
-      currentAgendas[agendaIdx].photos.splice(photoIdx, 1);
-      renderFormList();
-      renderPosterTable();
-      autoSaveToSheets();
-      showToast("Foto dihapus");
     }
 
     function runSmartSearch(keyword) {
@@ -1261,7 +1203,7 @@
             <span class="font-bold text-white px-2 py-0.5 rounded text-[10px] shrink-0" style="background:${theme.badge}">#${idx + 1}</span>
             <div class="truncate">
               <span class="font-bold text-slate-900">${item.pukul || '00.00'}</span> - <span class="text-slate-700">${item.acara || 'Agenda Belum Diisi'}</span>
-              <div class="text-[10px] text-slate-500">Pejabat: ${item.pejabat || '-'}${item.photos && item.photos.length > 0 ? ` | 📸 ${item.photos.length} Foto` : ''}</div>
+              <div class="text-[10px] text-slate-500">Pejabat: ${item.pejabat || '-'}</div>
             </div>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
@@ -1566,11 +1508,11 @@
 
     document.getElementById("posterHarian").classList.add("active-print-poster");
 
-    // Jalankan Sinkronisasi Otomatis saat aplikasi pertama kali dibuka
+    // Jalankan Sinkronisasi Otomatis saat pertama kali dibuka
     syncFromGoogleSheets();
     loadDateData(localStorage.getItem(CURRENT_ISO_KEY) || "2026-09-07");
 
-    // Auto-sync berkala setiap 10 detik agar perangkat lain langsung mendeteksi perubahan
+    // Auto-sync berkala setiap 10 detik
     setInterval(() => {
       syncFromGoogleSheets();
     }, 10000);
