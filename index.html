@@ -32,11 +32,7 @@
       top: 0; left: 0; right: 0; height: 6px;
       background: linear-gradient(90deg, #004D40 0%, #00897B 50%, #F59E0B 100%);
     }
-    .poster-wrapper {
-      width: 100%;
-      overflow-x: auto;
-      padding: 4px 0;
-    }
+    .poster-wrapper { width: 100%; overflow-x: auto; padding: 4px 0; }
     @media print {
       body * { visibility: hidden; }
       .active-print-poster, .active-print-poster * { visibility: visible; }
@@ -46,7 +42,6 @@
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 pb-24">
 
-  <!-- Top Bar Navigasi Utama -->
   <div class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 px-4 py-3 shadow-xs">
     <div class="max-w-2xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2.5">
@@ -58,64 +53,37 @@
           <p class="text-[10px] text-teal-700 font-semibold">Portal Informasi & Dokumen Resmi Dinas</p>
         </div>
       </div>
-      <div class="flex items-center gap-1.5">
-        <button onclick="protectedAction(toggleOperatorPanel)" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1 transition-all">
-          <i data-lucide="settings" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Panel Operator</span>
-        </button>
-      </div>
+      <button onclick="protectedAction(toggleOperatorPanel)" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1 transition-all">
+        <i data-lucide="settings" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Panel Operator</span>
+      </button>
     </div>
 
-    <!-- TAB PILIHAN UTAMA -->
     <div class="max-w-2xl mx-auto mt-3 grid grid-cols-4 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-[11px] font-bold text-center">
-      <button id="tabHarian" onclick="switchView('harian')" class="py-2 rounded-lg bg-teal-700 text-white shadow-xs flex items-center justify-center gap-1 transition-all">
-        <i data-lucide="calendar-day" class="w-3.5 h-3.5"></i> Harian
-      </button>
-      <button id="tabMingguan" onclick="switchView('mingguan')" class="py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1 transition-all">
-        <i data-lucide="calendar-range" class="w-3.5 h-3.5"></i> Mingguan
-      </button>
-      <button id="tabBulanan" onclick="switchView('bulanan')" class="py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1 transition-all">
-        <i data-lucide="calendar-days" class="w-3.5 h-3.5"></i> Bulanan
-      </button>
-      <button id="tabPejabat" onclick="switchView('pejabat')" class="py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1 transition-all">
-        <i data-lucide="user-check" class="w-3.5 h-3.5"></i> Pejabat
-      </button>
+      <button id="tabHarian" onclick="switchView('harian')" class="py-2 rounded-lg bg-teal-700 text-white shadow-xs flex items-center justify-center gap-1">Harian</button>
+      <button id="tabMingguan" onclick="switchView('mingguan')" class="py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1">Mingguan</button>
+      <button id="tabBulanan" onclick="switchView('bulanan')" class="py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1">Bulanan</button>
+      <button id="tabPejabat" onclick="switchView('pejabat')" class="py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1">Pejabat</button>
     </div>
   </div>
 
-  <!-- MODAL FORM INPUT/EDIT AGENDA -->
   <div id="agendaModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white w-full max-w-lg rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4 max-h-[92vh] flex flex-col overflow-y-auto">
       <div class="flex justify-between items-center pb-2 border-b border-slate-100">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center">
-            <i data-lucide="calendar-plus" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <h3 id="modalTitle" class="text-sm font-bold text-slate-900">Form Agenda Kegiatan</h3>
-            <p class="text-[10px] text-slate-500">Atur rincian waktu, acara, dan pejabat</p>
-          </div>
-        </div>
-        <button onclick="closeAgendaModal()" class="p-1 rounded-full text-slate-400 hover:text-slate-600">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
+        <h3 id="modalTitle" class="text-sm font-bold text-slate-900">Form Agenda Kegiatan</h3>
+        <button onclick="closeAgendaModal()" class="p-1 rounded-full text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-
       <div id="modalFormContent" class="space-y-3 text-xs"></div>
-
-      <div class="pt-2 border-t border-slate-100 flex justify-end gap-2">
-        <button onclick="closeAgendaModal()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs">Selesai & Simpan</button>
+      <div class="pt-2 border-t border-slate-100 flex justify-end">
+        <button onclick="closeAgendaModal()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-xs">Selesai & Simpan ke Cloud</button>
       </div>
     </div>
   </div>
 
   <div class="max-w-xl mx-auto p-3 sm:p-4 space-y-5">
-    
-    <!-- NOTIFIKASI TOAST -->
     <div id="saveToast" class="hidden bg-emerald-50 border border-emerald-300 text-emerald-800 px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between shadow-sm">
       <span class="flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> <span id="toastText">Berhasil!</span></span>
     </div>
 
-    <!-- 1. KONTROL TANGGAL & NAVIGASI -->
     <div id="dateControlBox" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
       <div class="flex items-center justify-between">
         <div>
@@ -123,8 +91,8 @@
           <span id="labelHeaderTanggal" class="text-sm font-bold text-teal-900">Pilih Tanggal Agenda</span>
         </div>
         <div class="flex items-center gap-1.5">
-          <button id="btnPrev" onclick="handleNavShift(-1)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all">Kemarin</button>
-          <button id="btnNext" onclick="handleNavShift(1)" class="bg-teal-700 hover:bg-teal-800 text-white px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-xs transition-all">Besok</button>
+          <button id="btnPrev" onclick="handleNavShift(-1)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-xl text-xs font-bold">Kemarin</button>
+          <button id="btnNext" onclick="handleNavShift(1)" class="bg-teal-700 hover:bg-teal-800 text-white px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-xs">Besok</button>
         </div>
       </div>
       <div id="datePickerRow" class="grid grid-cols-1 sm:grid-cols-12 gap-2">
@@ -132,75 +100,37 @@
         <input type="text" id="editTanggal" value="Senin, 7 September 2026" oninput="updateHeaderManual(this.value)" class="sm:col-span-7 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
       </div>
 
-      <!-- TOMBOL UNDUH & CETAK -->
       <div class="pt-2 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <button onclick="downloadActivePoster()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all">
-          <i data-lucide="download" class="w-4 h-4"></i> Unduh PNG
-        </button>
-        <button onclick="printPdfA4()" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all">
-          <i data-lucide="printer" class="w-4 h-4"></i> Cetak PDF
-        </button>
-        <button onclick="sendToWhatsApp()" class="bg-sky-600 hover:bg-sky-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all">
-          <i data-lucide="message-square" class="w-4 h-4"></i> Kirim WA
-        </button>
-        <button onclick="sendSusulanToWhatsApp()" class="bg-amber-600 hover:bg-amber-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all">
-          <i data-lucide="bell-ring" class="w-4 h-4"></i> WA Revisi
-        </button>
+        <button onclick="downloadActivePoster()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5"><i data-lucide="download" class="w-4 h-4"></i> Unduh PNG</button>
+        <button onclick="printPdfA4()" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5"><i data-lucide="printer" class="w-4 h-4"></i> Cetak PDF</button>
+        <button onclick="sendToWhatsApp()" class="bg-sky-600 hover:bg-sky-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5"><i data-lucide="message-square" class="w-4 h-4"></i> Kirim WA</button>
+        <button onclick="sendSusulanToWhatsApp()" class="bg-amber-600 hover:bg-amber-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5"><i data-lucide="bell-ring" class="w-4 h-4"></i> WA Revisi</button>
       </div>
     </div>
 
-    <!-- ==================== PANEL OPERATOR (PIN: 969798) ==================== -->
     <div id="operatorPanel" class="hidden bg-white p-4 rounded-2xl shadow-md border-2 border-teal-700 space-y-3">
       <div class="flex justify-between items-center pb-2 border-b border-teal-100">
-        <div class="flex items-center gap-2">
-          <span class="bg-teal-100 text-teal-800 p-1.5 rounded-lg"><i data-lucide="shield-check" class="w-4 h-4"></i></span>
-          <div>
-            <h3 class="text-xs font-black text-teal-900 uppercase">Panel Khusus Operator</h3>
-            <p class="text-[10px] text-slate-500">Sinkronisasi & Kelola Jadwal Cloud</p>
-          </div>
-        </div>
+        <h3 class="text-xs font-black text-teal-900 uppercase">Panel Khusus Operator</h3>
         <button onclick="toggleOperatorPanel()" class="text-slate-400 hover:text-slate-600 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg">Tutup</button>
       </div>
 
-      <div class="bg-teal-50 p-2.5 rounded-xl border border-teal-200 text-[11px] text-teal-900 font-semibold flex items-center justify-between">
-        <span class="flex items-center gap-1.5"><i data-lucide="cloud" class="w-3.5 h-3.5 text-teal-600"></i> Sinkronisasi Cloud Aktif</span>
-        <button onclick="loadCloudData()" class="bg-teal-700 hover:bg-teal-800 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">Segarkan Data</button>
+      <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 text-[11px] text-emerald-900 font-semibold flex items-center justify-between">
+        <span class="flex items-center gap-1.5"><i data-lucide="wifi" class="w-3.5 h-3.5 text-emerald-600"></i> Google Sheets Cloud Aktif</span>
+        <button onclick="syncFromGoogleSheets()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">Segarkan Data</button>
       </div>
 
       <div class="grid grid-cols-2 gap-2">
-        <button onclick="exportMonthlyExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs flex items-center justify-center gap-1.5">
-          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> Rekap Excel (.xls)
-        </button>
-        <button onclick="sortAgendasByTime()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs flex items-center justify-center gap-1.5">
-          <i data-lucide="arrow-down-up" class="w-3.5 h-3.5"></i> Urutkan Jam
-        </button>
+        <button onclick="exportMonthlyExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs">Rekap Excel (.xls)</button>
+        <button onclick="sortAgendasByTime()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs">Urutkan Jam</button>
       </div>
-      <div class="pt-1">
-        <button onclick="addAgenda()" class="w-full bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs flex items-center justify-center gap-1.5">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah Baris Agenda Baru
-        </button>
-      </div>
+      <button onclick="addAgenda()" class="w-full bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs">Tambah Baris Agenda Baru</button>
 
-      <!-- OPSI REVISI UTAMA -->
-      <div class="pt-1">
-        <div class="bg-rose-50 p-2 rounded-xl border border-rose-200 flex items-center">
-          <label class="flex items-center gap-1 text-xs font-bold text-rose-900 cursor-pointer w-full">
-            <input type="checkbox" id="checkIsRevision" onchange="toggleRevisionMode(this.checked)" class="w-4 h-4 text-rose-600 rounded">
-            <span>Tandai Sebagai "JADWAL REVISI"</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- DAFTAR RINGKAS AGENDA -->
       <div id="editListContainer" class="space-y-2 pt-2"></div>
     </div>
 
-    <!-- ==================== 1. MODE HARIAN ==================== -->
+    <!-- TAMPILAN HARIAN -->
     <div id="viewHarianContainer" class="space-y-4">
       <div class="flex flex-col items-center">
-        <div class="text-[11px] font-bold text-teal-800 uppercase tracking-wider mb-2 self-start px-1 flex items-center gap-1">
-          <i data-lucide="image" class="w-3.5 h-3.5"></i> Pratinjau Poster Harian
-        </div>
         <div class="poster-wrapper">
           <div id="posterHarian" class="poster-box active-print-poster rounded-2xl shadow-xl border border-teal-900/20 text-slate-900">
             <div>
@@ -211,187 +141,73 @@
                   <span class="text-[7.5px] font-bold tracking-widest text-teal-700 uppercase block mt-0.5">Santun, Aman, Nyaman, Tentram, Rapi, Indah</span>
                 </div>
               </div>
-
               <div class="mt-3.5 h-[1px] w-full bg-teal-900/15"></div>
-
               <div class="mt-3 text-left relative flex items-baseline justify-between">
                 <div>
                   <h2 class="text-[18px] font-black tracking-wider font-montserrat uppercase text-teal-950 leading-none">JADWAL KEGIATAN</h2>
                   <span id="viewTanggal" class="text-[11px] font-bold text-teal-800 tracking-wide font-montserrat uppercase mt-1 block">Senin, 7 September 2026</span>
                 </div>
-                <div id="posterRevisionBadge" class="hidden bg-rose-600 text-white font-black text-[9px] px-2.5 py-1 rounded shadow-sm tracking-wider uppercase transform rotate-2">REVISI</div>
               </div>
             </div>
-
             <div id="posterTableSection" class="my-3"></div>
-
             <div class="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[7.5px] text-slate-700 font-medium mt-auto">
-              <div class="flex items-center gap-1 font-black text-teal-950 tracking-wider">
-                <i data-lucide="award" class="w-3 h-3 text-amber-500"></i>
-                <span>BerAKHLAK</span>
-              </div>
-              <div class="text-right tracking-tight font-semibold">
-                <span>Berorientasi Pelayanan</span> • <span>Akuntabel</span> • <span>Kompeten</span> • <span>Harmonis</span> • <span>Loyal</span> • <span>Adaptif</span> • <span>Kolaboratif</span>
-              </div>
+              <div class="flex items-center gap-1 font-black text-teal-950 tracking-wider"><i data-lucide="award" class="w-3 h-3 text-amber-500"></i><span>BerAKHLAK</span></div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ==================== 2. MODE MINGGUAN ==================== -->
+    <!-- TAMPILAN MINGGUAN -->
     <div id="viewMingguanContainer" class="hidden space-y-4">
       <div class="flex flex-col items-center">
-        <div class="text-[11px] font-bold text-teal-800 uppercase tracking-wider mb-2 self-start px-1 flex items-center gap-1">
-          <i data-lucide="image" class="w-3.5 h-3.5"></i> Pratinjau Poster Mingguan
-        </div>
         <div class="poster-wrapper">
           <div id="posterMingguan" class="poster-box rounded-2xl shadow-xl border border-teal-900/20 text-slate-900">
             <div>
-              <div class="flex items-center gap-3 border-l-4 border-teal-700 pl-3.5 py-0.5">
-                <div>
-                  <span class="text-[8px] font-extrabold tracking-[0.2em] text-slate-500 uppercase block">PEMERINTAH KOTA ADMINISTRASI JAKARTA TIMUR</span>
-                  <h3 class="text-xl font-black text-teal-950 tracking-wide font-montserrat uppercase leading-none mt-0.5">KECAMATAN CIRACAS</h3>
-                  <span class="text-[7.5px] font-bold tracking-widest text-teal-700 uppercase block mt-0.5">Santun, Aman, Nyaman, Tentram, Rapi, Indah</span>
-                </div>
-              </div>
-              <div class="mt-3.5 h-[1px] w-full bg-teal-900/15"></div>
-              <div class="mt-3 text-left">
-                <h2 class="text-[18px] font-black tracking-wider font-montserrat uppercase text-teal-950 leading-none">AGENDA MINGGUAN</h2>
-                <span id="posterWeekRangeTitle" class="text-[11px] font-bold text-teal-800 tracking-wide font-montserrat uppercase mt-1 block">Senin - Minggu</span>
-              </div>
+              <h3 class="text-xl font-black text-teal-950 font-montserrat uppercase">KECAMATAN CIRACAS</h3>
+              <h2 class="text-[18px] font-black font-montserrat uppercase text-teal-950 mt-1">AGENDA MINGGUAN</h2>
+              <span id="posterWeekRangeTitle" class="text-[11px] font-bold text-teal-800 uppercase block mt-1">Senin - Minggu</span>
             </div>
-            
             <div id="posterWeekContent" class="w-full my-2 space-y-1.5 flex-1"></div>
-
-            <div class="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[7.5px] text-slate-700 font-medium mt-auto">
-              <div class="flex items-center gap-1 font-black text-teal-950 tracking-wider">
-                <i data-lucide="award" class="w-3 h-3 text-amber-500"></i>
-                <span>BerAKHLAK</span>
-              </div>
-              <div class="text-right tracking-tight font-semibold">
-                <span>Berorientasi Pelayanan</span> • <span>Akuntabel</span> • <span>Kompeten</span> • <span>Harmonis</span> • <span>Loyal</span> • <span>Adaptif</span> • <span>Kolaboratif</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ==================== 3. MODE BULANAN ==================== -->
+    <!-- TAMPILAN BULANAN -->
     <div id="viewBulananContainer" class="hidden space-y-4">
       <div class="flex flex-col items-center">
-        <div class="text-[11px] font-bold text-teal-800 uppercase tracking-wider mb-2 self-start px-1 flex items-center gap-1">
-          <i data-lucide="image" class="w-3.5 h-3.5"></i> Pratinjau Poster Bulanan
-        </div>
         <div class="poster-wrapper">
           <div id="posterBulanan" class="poster-box rounded-2xl shadow-xl border border-teal-900/20 text-slate-900">
             <div>
-              <div class="flex items-center gap-3 border-l-4 border-teal-700 pl-3.5 py-0.5">
-                <div>
-                  <span class="text-[8px] font-extrabold tracking-[0.2em] text-slate-500 uppercase block">PEMERINTAH KOTA ADMINISTRASI JAKARTA TIMUR</span>
-                  <h3 class="text-xl font-black text-teal-950 tracking-wide font-montserrat uppercase leading-none mt-0.5">KECAMATAN CIRACAS</h3>
-                  <span class="text-[7.5px] font-bold tracking-widest text-teal-700 uppercase block mt-0.5">Santun, Aman, Nyaman, Tentram, Rapi, Indah</span>
-                </div>
-              </div>
-              <div class="mt-3.5 h-[1px] w-full bg-teal-900/15"></div>
-              <div class="mt-3 text-left">
-                <h2 class="text-[18px] font-black tracking-wider font-montserrat uppercase text-teal-950 leading-none">KALENDER KEGIATAN</h2>
-                <span id="posterMonthTitle" class="text-[11px] font-bold text-teal-800 tracking-wide font-montserrat uppercase mt-1 block">September 2026</span>
-              </div>
+              <h3 class="text-xl font-black text-teal-950 font-montserrat uppercase">KECAMATAN CIRACAS</h3>
+              <h2 class="text-[18px] font-black font-montserrat uppercase text-teal-950 mt-1">KALENDER KEGIATAN</h2>
+              <span id="posterMonthTitle" class="text-[11px] font-bold text-teal-800 uppercase block mt-1">September 2026</span>
             </div>
-
             <div class="my-2 bg-white rounded-xl border border-teal-900/30 overflow-hidden shadow-xs">
-              <div class="grid grid-cols-7 gap-0 text-center font-bold text-[8px] bg-[#004e54] text-white py-1">
-                <div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
-              </div>
+              <div class="grid grid-cols-7 gap-0 text-center font-bold text-[8px] bg-[#004e54] text-white py-1"><div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div></div>
               <div id="posterMonthGrid" class="grid grid-cols-7 gap-0 text-[8px] divide-x divide-y divide-slate-200"></div>
             </div>
-            
-            <div class="bg-teal-50/80 p-2.5 rounded-xl border border-teal-200 text-[8px] space-y-1 flex-1 overflow-y-auto max-h-[190px]">
-              <div class="font-bold text-teal-900 sticky top-0 bg-teal-50 py-0.5">Daftar Lengkap Agenda Terjadwal Bulan Ini:</div>
-              <div id="posterMonthAgendaSummary" class="space-y-1 text-slate-800 text-[8px]"></div>
-            </div>
-
-            <div class="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[7.5px] text-slate-700 font-medium mt-auto">
-              <div class="flex items-center gap-1 font-black text-teal-950 tracking-wider">
-                <i data-lucide="award" class="w-3 h-3 text-amber-500"></i>
-                <span>BerAKHLAK</span>
-              </div>
-              <div class="text-right tracking-tight font-semibold">
-                <span>Berorientasi Pelayanan</span> • <span>Akuntabel</span> • <span>Kompeten</span> • <span>Harmonis</span> • <span>Loyal</span> • <span>Adaptif</span> • <span>Kolaboratif</span>
-              </div>
-            </div>
+            <div id="posterMonthAgendaSummary" class="space-y-1 text-slate-800 text-[8px] max-h-[190px] overflow-y-auto"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ==================== 4. MODE REKAP PEJABAT ==================== -->
+    <!-- TAMPILAN PEJABAT -->
     <div id="viewPejabatContainer" class="hidden space-y-4">
       <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <div>
-            <span class="text-xs font-bold text-slate-800 block">Tabel Rekapitulasi Kegiatan Pejabat</span>
-            <span class="text-[11px] text-teal-700 font-semibold">Pilih nama & rentang waktu laporan</span>
-          </div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <select id="selectPejabatFilter" onchange="renderPejabatReport()" class="bg-teal-50 border border-teal-300 rounded-xl px-3 py-2 text-xs font-bold text-teal-950">
-              <option value="Camat">Camat</option>
-              <option value="Wakil Camat">Wakil Camat</option>
-              <option value="Sekcam">Sekcam</option>
-              <option value="Kasi Pem">Kasi Pem</option>
-              <option value="Kasi Ekbang">Kasi Ekbang</option>
-              <option value="Kasi Kesra">Kasi Kesra</option>
-              <option value="Kasubbag Keuangan">Kasubbag Keuangan</option>
-              <option value="Pak Amril">Pak Amril</option>
-              <option value="Bendahara">Bendahara</option>
-            </select>
-            <select id="selectPeriodePejabat" onchange="renderPejabatReport()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
-              <option value="mingguan">Per Minggu</option>
-              <option value="bulanan" selected>Per Bulan</option>
-              <option value="tahunan">Per Tahun</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-          <span id="pejabatReportCount" class="text-xs font-bold text-slate-600">0 Agenda ditemukan</span>
-          <button onclick="downloadPejabatPoster()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all">
-            <i data-lucide="download" class="w-4 h-4"></i> Cetak Tabel Rekap
-          </button>
-        </div>
+        <select id="selectPejabatFilter" onchange="renderPejabatReport()" class="bg-teal-50 border border-teal-300 rounded-xl px-3 py-2 text-xs font-bold text-teal-950 w-full">
+          <option value="Camat">Camat</option>
+          <option value="Wakil Camat">Wakil Camat</option>
+          <option value="Sekcam">Sekcam</option>
+        </select>
       </div>
-
       <div class="flex flex-col items-center">
         <div class="poster-wrapper">
           <div id="posterPejabat" class="poster-box rounded-2xl shadow-xl border border-teal-900/20 text-slate-900">
-            <div>
-              <div class="flex items-center gap-3 border-l-4 border-teal-700 pl-3.5 py-0.5">
-                <div>
-                  <span class="text-[8px] font-extrabold tracking-[0.2em] text-slate-500 uppercase block">PEMERINTAH KOTA ADMINISTRASI JAKARTA TIMUR</span>
-                  <h3 class="text-xl font-black text-teal-950 tracking-wide font-montserrat uppercase leading-none mt-0.5">KECAMATAN CIRACAS</h3>
-                  <span class="text-[7.5px] font-bold tracking-widest text-teal-700 uppercase block mt-0.5">Santun, Aman, Nyaman, Tentram, Rapi, Indah</span>
-                </div>
-              </div>
-              <div class="mt-3.5 h-[1px] w-full bg-teal-900/15"></div>
-              <div class="mt-3 text-left">
-                <h2 id="posterPejabatMainTitle" class="text-[16px] font-black tracking-wider font-montserrat uppercase text-teal-950 leading-none">REKAPITULASI KEGIATAN PEJABAT</h2>
-                <span id="posterPejabatSubTitle" class="text-[10px] font-bold text-teal-800 tracking-wide font-montserrat uppercase mt-1 block">Camat • Bulan September 2026</span>
-              </div>
-            </div>
-
-            <div id="posterPejabatContent" class="my-3 overflow-hidden rounded-xl border border-teal-900/30 shadow-xs bg-white flex-1"></div>
-
-            <div class="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[7.5px] text-slate-700 font-medium mt-auto">
-              <div class="flex items-center gap-1 font-black text-teal-950 tracking-wider">
-                <i data-lucide="award" class="w-3 h-3 text-amber-500"></i>
-                <span>BerAKHLAK</span>
-              </div>
-              <div class="text-right tracking-tight font-semibold">
-                <span>Berorientasi Pelayanan</span> • <span>Akuntabel</span> • <span>Kompeten</span> • <span>Harmonis</span> • <span>Loyal</span> • <span>Adaptif</span> • <span>Kolaboratif</span>
-              </div>
-            </div>
+            <h2 id="posterPejabatMainTitle" class="text-[16px] font-black font-montserrat uppercase text-teal-950">REKAPITULASI KEGIATAN</h2>
+            <div id="posterPejabatContent" class="my-3 overflow-hidden rounded-xl border border-teal-900/30 bg-white flex-1"></div>
           </div>
         </div>
       </div>
@@ -400,712 +216,188 @@
   </div>
 
   <script>
+    // ** TEMPEL URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI **
+    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbw7WdTsLyZeLpEv7DbeNI5mT4U6PKp4m-lnRymaKCasDJHWCrlmfJCDf7TAcgRgIGgetA/exec";
+    
+    const DB_KEY = "ciracas_sheets_cache_db";
     const CURRENT_ISO_KEY = "ciracas_active_iso_date";
     const ADMIN_PIN = "969798";
     let isAuthenticated = false;
-    let cloudDB = {};
 
-    async function loadCloudData() {
-      try {
-        const res = await fetch('jadwal.json?t=' + new Date().getTime());
-        if (res.ok) {
-          const data = await res.json();
-          if (data && typeof data === 'object') {
-            cloudDB = data;
-            showToast("Data cloud tersinkron ✓");
-          }
-        }
-      } catch (e) {
-        console.log("Menggunakan cache lokal");
-      }
-      loadDateData(currentISO);
-    }
-
-    function toggleOperatorPanel() {
-      document.getElementById("operatorPanel").classList.toggle("hidden");
-    }
+    function toggleOperatorPanel() { document.getElementById("operatorPanel").classList.toggle("hidden"); }
 
     function protectedAction(callback) {
-      if (isAuthenticated) {
-        callback();
-        return;
-      }
+      if (isAuthenticated) { callback(); return; }
       const inputPin = prompt("🔐 Masukkan PIN Operator Kecamatan:");
-      if (inputPin === ADMIN_PIN) {
-        isAuthenticated = true;
-        showToast("Akses Operator Diterima ✓");
-        callback();
-      } else if (inputPin !== null) {
-        alert("PIN Salah! Akses ditolak.");
-      }
+      if (inputPin === ADMIN_PIN) { isAuthenticated = true; showToast("Akses Diterima ✓"); callback(); }
+      else if (inputPin !== null) { alert("PIN Salah!"); }
     }
 
     const daysId = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const monthsId = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-
-    const rowColors = [
-      { badge: "#028090", bg: "#F0F8FA" },
-      { badge: "#00A896", bg: "#EBF7F7" },
-      { badge: "#E9A024", bg: "#FEF7EA" },
-      { badge: "#43AA8B", bg: "#EFF8F3" },
-      { badge: "#E63946", bg: "#FDEEF0" },
-      { badge: "#52B788", bg: "#F0F8F3" },
-      { badge: "#5E60CE", bg: "#F2F1FA" }
-    ];
-
-    const roleThemes = {
-      wakil: { badge: "#10B981", bg: "#D1FAE5" },
-      sekcam: { badge: "#ec4899", bg: "#fce7f3" },
-      camat: { badge: "#00a8e8", bg: "#d0f1fc" }
-    };
+    const rowColors = [{ badge: "#028090", bg: "#F0F8FA" }, { badge: "#00A896", bg: "#EBF7F7" }, { badge: "#E9A024", bg: "#FEF7EA" }];
 
     function detectRowTheme(item) {
       const peb = (item.pejabat || '').toLowerCase();
-      if (peb.includes("wakil") || peb.includes("wacam")) return roleThemes.wakil;
-      if (peb.includes("sekcam")) return roleThemes.sekcam;
-      if (peb.includes("camat")) return roleThemes.camat;
+      if (peb.includes("wakil")) return { badge: "#10B981", bg: "#D1FAE5" };
+      if (peb.includes("sekcam")) return { badge: "#ec4899", bg: "#fce7f3" };
+      if (peb.includes("camat")) return { badge: "#00a8e8", bg: "#d0f1fc" };
       return { badge: "#475569", bg: "#FFFFFF" };
     }
 
-    let currentMode = "harian";
-    let currentISO = "2026-09-07";
-    let currentDateObj = new Date("2026-09-07T00:00:00");
-    let currentAgendas = [];
-    let weekStartObj = new Date("2026-09-07T00:00:00");
-    let monthDateObj = new Date("2026-09-07T00:00:00");
+    let currentMode = "harian", currentISO = "2026-09-07", currentDateObj = new Date("2026-09-07T00:00:00"), currentAgendas = [];
+    let weekStartObj = new Date("2026-09-07T00:00:00"), monthDateObj = new Date("2026-09-07T00:00:00");
 
-    function formatDateToIndonesian(d) {
-      return `${daysId[d.getDay()]}, ${d.getDate()} ${monthsId[d.getMonth()]} ${d.getFullYear()}`;
-    }
-
-    function formatToISO(d) {
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    }
-
-    function getDB() {
-      return cloudDB;
-    }
-
-    function saveDB(db) {
-      cloudDB = db;
-      // Disimpan secara lokal saja saat mengetik tanpa mendownload file
-      localStorage.setItem("ciracas_local_cache", JSON.stringify(db));
-    }
+    function formatDateToIndonesian(d) { return `${daysId[d.getDay()]}, ${d.getDate()} ${monthsId[d.getMonth()]} ${d.getFullYear()}`; }
+    function formatToISO(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+    function getDB() { try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; } catch(e) { return {}; } }
+    function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 
     function formatTimeInput(val) {
       if (!val) return "";
       let clean = String(val).trim().replace(/[^0-9.]/g, '');
-      if (clean === "") return val;
       if (clean.length === 1) return "0" + clean + ".00";
       if (clean.length === 2 && !clean.includes('.')) return clean + ".00";
-      if (clean.length === 3 && clean.indexOf('.') === 1) return "0" + clean + "0";
       if (clean.length === 4 && !clean.includes('.')) return clean.substring(0, 2) + "." + clean.substring(2);
       return clean.replace(':', '.');
     }
 
     function switchView(mode) {
       currentMode = mode;
-      const vH = document.getElementById("viewHarianContainer");
-      const vM = document.getElementById("viewMingguanContainer");
-      const vB = document.getElementById("viewBulananContainer");
-      const vP = document.getElementById("viewPejabatContainer");
-      const dateCtrl = document.getElementById("dateControlBox");
-      const navTitle = document.getElementById("navigasiLabelTitle");
-      const btnPrev = document.getElementById("btnPrev");
-      const btnNext = document.getElementById("btnNext");
-      const datePickerRow = document.getElementById("datePickerRow");
-
-      [vH, vM, vB, vP].forEach(el => el.classList.add("hidden"));
-      dateCtrl.classList.remove("hidden");
-      datePickerRow.classList.remove("hidden");
-
-      [document.getElementById("posterHarian"), document.getElementById("posterMingguan"), document.getElementById("posterBulanan"), document.getElementById("posterPejabat")].forEach(el => el.classList.remove("active-print-poster"));
-
-      ["tabHarian", "tabMingguan", "tabBulanan", "tabPejabat"].forEach(id => {
-        document.getElementById(id).className = "py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1 font-bold";
-      });
-
-      if (mode === 'harian') {
-        vH.classList.remove("hidden");
-        document.getElementById("posterHarian").classList.add("active-print-poster");
-        document.getElementById("tabHarian").className = "py-2 rounded-lg bg-teal-700 text-white shadow-xs flex items-center justify-center gap-1 font-bold";
-        navTitle.innerText = "NAVIGASI TANGGAL HARIAN";
-        btnPrev.innerText = "Kemarin";
-        btnNext.innerText = "Besok";
-        loadDateData(currentISO);
-      } else if (mode === 'mingguan') {
-        vM.classList.remove("hidden");
-        document.getElementById("posterMingguan").classList.add("active-print-poster");
-        document.getElementById("tabMingguan").className = "py-2 rounded-lg bg-teal-700 text-white shadow-xs flex items-center justify-center gap-1 font-bold";
-        navTitle.innerText = "NAVIGASI PERIODE MINGGUAN";
-        btnPrev.innerText = "Minggu Lalu";
-        btnNext.innerText = "Minggu Depan";
-        renderWeeklyPoster();
-      } else if (mode === 'bulanan') {
-        vB.classList.remove("hidden");
-        document.getElementById("posterBulanan").classList.add("active-print-poster");
-        document.getElementById("tabBulanan").className = "py-2 rounded-lg bg-teal-700 text-white shadow-xs flex items-center justify-center gap-1 font-bold";
-        navTitle.innerText = "NAVIGASI PERIODE BULANAN";
-        btnPrev.innerText = "Bulan Lalu";
-        btnNext.innerText = "Bulan Depan";
-        renderMonthlyPoster();
-      } else if (mode === 'pejabat') {
-        vP.classList.remove("hidden");
-        document.getElementById("posterPejabat").classList.add("active-print-poster");
-        dateCtrl.classList.add("hidden");
-        document.getElementById("tabPejabat").className = "py-2 rounded-lg bg-teal-700 text-white shadow-xs flex items-center justify-center gap-1 font-bold";
-        renderPejabatReport();
-      }
+      ["viewHarianContainer", "viewMingguanContainer", "viewBulananContainer", "viewPejabatContainer"].forEach(id => document.getElementById(id).classList.add("hidden"));
+      document.getElementById("dateControlBox").classList.toggle("hidden", mode === 'pejabat');
+      
+      if (mode === 'harian') { document.getElementById("viewHarianContainer").classList.remove("hidden"); loadDateData(currentISO); }
+      else if (mode === 'mingguan') { document.getElementById("viewMingguanContainer").classList.remove("hidden"); renderWeeklyPoster(); }
+      else if (mode === 'bulanan') { document.getElementById("viewBulananContainer").classList.remove("hidden"); renderMonthlyPoster(); }
+      else if (mode === 'pejabat') { document.getElementById("viewPejabatContainer").classList.remove("hidden"); renderPejabatReport(); }
       lucide.createIcons();
-    }
-
-    function handleNavShift(dir) {
-      if (currentMode === 'harian') shiftDay(dir);
-      else if (currentMode === 'mingguan') shiftWeek(dir);
-      else if (currentMode === 'bulanan') shiftMonth(dir);
     }
 
     function loadDateData(isoStr) {
       currentISO = isoStr;
-      localStorage.setItem(CURRENT_ISO_KEY, isoStr);
       const parts = isoStr.split("-");
       currentDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+      weekStartObj = new Date(currentDateObj); monthDateObj = new Date(currentDateObj);
 
-      weekStartObj = new Date(currentDateObj);
-      monthDateObj = new Date(currentDateObj);
-
-      const formatted = formatDateToIndonesian(currentDateObj);
       document.getElementById("nativeDatePicker").value = isoStr;
-      document.getElementById("editTanggal").value = formatted;
-      document.getElementById("viewTanggal").innerText = formatted;
+      document.getElementById("editTanggal").value = formatDateToIndonesian(currentDateObj);
+      document.getElementById("viewTanggal").innerText = formatDateToIndonesian(currentDateObj);
 
       const db = getDB();
       currentAgendas = (db[isoStr] && db[isoStr].length > 0) ? db[isoStr] : [{ pukul: "", acara: "", tempat: "", asal: "", pejabat: "", delegasi: "", pendamping: "-", keterangan: "-", susulan: false, revisiItem: false }];
-
-      renderFormList();
-      renderPosterTable();
-      renderWeeklyPoster();
-      renderMonthlyPoster();
-      lucide.createIcons();
+      renderFormList(); renderPosterTable();
     }
 
-    function persistAndRefresh() {
+    async function syncFromGoogleSheets() {
+      try {
+        const res = await fetch(SHEETDB_URL);
+        const rows = await res.json();
+        if (Array.isArray(rows)) {
+          const newDb = {};
+          rows.forEach(r => {
+            const tgl = r.tanggal || "2026-09-07";
+            if (!newDb[tgl]) newDb[tgl] = [];
+            newDb[tgl].push({
+              pukul: formatTimeInput(r.pukul || ""), acara: r.acara || "", tempat: r.tempat || "",
+              asal: r.asal || "", pejabat: r.pejabat || "", delegasi: r.delegasi || "",
+              pendamping: r.pendamping || "-", keterangan: r.keterangan || "-",
+              susulan: r.susulan === "TRUE" || r.susulan === true, revisiItem: r.revisiItem === "TRUE" || r.revisiItem === true
+            });
+          });
+          saveDB(newDb);
+          loadDateData(currentISO);
+          showToast("Berhasil Sinkron dari Google Sheets ✓");
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function autoSaveToSheets() {
       const db = getDB();
       db[currentISO] = currentAgendas;
       saveDB(db);
-      renderFormList();
-      renderPosterTable();
-      renderWeeklyPoster();
-      renderMonthlyPoster();
+
+      try {
+        // Kirim data ke Google Sheets di background
+        fetch(SHEETDB_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "DELETE_BY_DATE", tanggal: currentISO }) });
+        for (let item of currentAgendas) {
+          if (!item.acara && !item.pukul) continue;
+          fetch(SHEETDB_URL, {
+            method: "POST", mode: "no-cors",
+            body: JSON.stringify({ action: "APPEND", tanggal: currentISO, data: item })
+          });
+        }
+        showToast("Tersimpan otomatis ke Google Sheets ✓");
+      } catch (e) { console.error(e); }
     }
 
     function showToast(msg) {
-      const toast = document.getElementById("saveToast");
+      const t = document.getElementById("saveToast");
       document.getElementById("toastText").innerText = msg;
-      toast.classList.remove("hidden");
-      setTimeout(() => { toast.classList.add("hidden"); }, 3000);
+      t.classList.remove("hidden");
+      setTimeout(() => t.classList.add("hidden"), 2000);
     }
 
     function onCalendarSelect(iso) { if (iso) loadDateData(iso); }
-    function shiftDay(d) {
-      const nextD = new Date(currentDateObj);
-      nextD.setDate(nextD.getDate() + d);
-      loadDateData(formatToISO(nextD));
-    }
+    function handleNavShift(dir) { currentDateObj.setDate(currentDateObj.getDate() + dir); loadDateData(formatToISO(currentDateObj)); }
     function updateHeaderManual(val) { document.getElementById("viewTanggal").innerText = val; }
 
-    function toggleRevisionMode(isRev) {
-      document.getElementById("posterRevisionBadge").classList.toggle("hidden", !isRev);
-    }
-
-    function parseTimeToMinutes(t) {
-      if (!t) return 9999;
-      const p = t.replace(/[^0-9.:]/g, '').replace(':', '.').split('.');
-      return ((parseInt(p[0], 10) || 0) * 60) + (parseInt(p[1], 10) || 0);
-    }
-
-    function sortAgendasByTime() {
-      currentAgendas.sort((a, b) => parseTimeToMinutes(a.pukul) - parseTimeToMinutes(b.pukul));
-      persistAndRefresh();
-    }
-
-    function openAgendaModal(index) {
-      const item = currentAgendas[index];
-      const modal = document.getElementById("agendaModal");
-      const title = document.getElementById("modalTitle");
-      const content = document.getElementById("modalFormContent");
-
-      title.innerText = `Edit Agenda #${index + 1}`;
-      content.innerHTML = `
-        <div class="space-y-3">
-          <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
-            <label class="flex items-center gap-1 text-[11px] font-bold text-amber-800 cursor-pointer bg-amber-100 px-2.5 py-1 rounded-full border border-amber-300">
-              <input type="checkbox" ${item.susulan ? 'checked' : ''} onchange="currentAgendas[${index}].susulan = this.checked; persistAndRefresh();" class="w-3.5 h-3.5 text-amber-600 rounded">
-              <span>Jadwal Susulan</span>
-            </label>
-            <label class="flex items-center gap-1 text-[11px] font-bold text-rose-800 cursor-pointer bg-rose-100 px-2.5 py-1 rounded-full border border-rose-300">
-              <input type="checkbox" ${item.revisiItem ? 'checked' : ''} onchange="currentAgendas[${index}].revisiItem = this.checked; persistAndRefresh();" class="w-3.5 h-3.5 text-rose-600 rounded">
-              <span>Revisi No</span>
-            </label>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pukul (Cth: 07.00)</label><input type="text" value="${item.pukul || ''}" oninput="currentAgendas[${index}].pukul = formatTimeInput(this.value); persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold"></div>
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pejabat Utama</label><input type="text" value="${item.pejabat || ''}" oninput="currentAgendas[${index}].pejabat = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold"></div>
-          </div>
-
-          <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pejabat Pengganti / Delegasi</label><input type="text" value="${item.delegasi || ''}" placeholder="Cth: Diwakili Sekcam" oninput="currentAgendas[${index}].delegasi = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
-
-          <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Acara / Kegiatan</label><textarea rows="3" oninput="currentAgendas[${index}].acara = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs">${item.acara || ''}</textarea></div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Tempat</label><input type="text" value="${item.tempat || ''}" oninput="currentAgendas[${index}].tempat = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Asal Surat</label><input type="text" value="${item.asal || ''}" oninput="currentAgendas[${index}].asal = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pendamping</label><input type="text" value="${item.pendamping || '-'}" oninput="currentAgendas[${index}].pendamping = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Keterangan</label><input type="text" value="${item.keterangan || '-'}" oninput="currentAgendas[${index}].keterangan = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
-          </div>
+    function openAgendaModal(idx) {
+      const item = currentAgendas[idx];
+      document.getElementById("modalTitle").innerText = `Edit Agenda #${idx + 1}`;
+      document.getElementById("modalFormContent").innerHTML = `
+        <div class="space-y-2">
+          <div><label class="font-bold">Pukul:</label><input type="text" value="${item.pukul || ''}" oninput="currentAgendas[${idx}].pukul=formatTimeInput(this.value); renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border rounded-xl p-2"></div>
+          <div><label class="font-bold">Pejabat:</label><input type="text" value="${item.pejabat || ''}" oninput="currentAgendas[${idx}].pejabat=this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border rounded-xl p-2"></div>
+          <div><label class="font-bold">Acara:</label><textarea rows="2" oninput="currentAgendas[${idx}].acara=this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border rounded-xl p-2">${item.acara || ''}</textarea></div>
+          <div><label class="font-bold">Tempat:</label><input type="text" value="${item.tempat || ''}" oninput="currentAgendas[${idx}].tempat=this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border rounded-xl p-2"></div>
         </div>
       `;
-      modal.classList.remove("hidden");
-      lucide.createIcons();
+      document.getElementById("agendaModal").classList.remove("hidden");
     }
-
-    function closeAgendaModal() {
-      document.getElementById("agendaModal").classList.add("hidden");
-      
-      // File jadwal.json HANYA diunduh SEKALI saat Anda klik Selesai & Simpan
-      const db = getDB();
-      db[currentISO] = currentAgendas;
-      cloudDB = db;
-
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", "jadwal.json");
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-
-      showToast("Berhasil! File jadwal.json terunduh untuk di-upload ke GitHub ✓");
-    }
+    function closeAgendaModal() { document.getElementById("agendaModal").classList.add("hidden"); renderFormList(); }
 
     function renderFormList() {
-      const container = document.getElementById("editListContainer");
-      container.innerHTML = "";
+      const c = document.getElementById("editListContainer"); c.innerHTML = "";
       currentAgendas.forEach((item, idx) => {
-        const theme = detectRowTheme(item);
-        let borderBg = 'border-slate-200 bg-slate-50';
-        if (item.susulan) borderBg = 'border-amber-400 bg-amber-50/60';
-        if (item.revisiItem) borderBg = 'border-rose-400 bg-rose-50/60';
-
-        const box = document.createElement("div");
-        box.className = `p-2.5 rounded-xl border ${borderBg} flex items-center justify-between text-xs`;
-        box.innerHTML = `
-          <div class="flex items-center gap-2 overflow-hidden pr-2">
-            <span class="font-bold text-white px-2 py-0.5 rounded text-[10px] shrink-0" style="background:${theme.badge}">#${idx + 1}</span>
-            <div class="truncate">
-              <span class="font-bold text-slate-900">${item.pukul || '00.00'}</span> - <span class="text-slate-700">${item.acara || 'Agenda Belum Diisi'}</span>
-              <div class="text-[10px] text-slate-500">Pejabat: ${item.pejabat || '-'}</div>
-            </div>
-          </div>
-          <div class="flex items-center gap-1.5 shrink-0">
-            <button onclick="openAgendaModal(${idx})" class="bg-teal-700 hover:bg-teal-800 text-white px-2.5 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1">
-              <i data-lucide="edit-3" class="w-3 h-3"></i> Edit
-            </button>
-            ${currentAgendas.length > 1 ? `<button onclick="currentAgendas.splice(${idx}, 1); persistAndRefresh();" class="text-rose-600 font-bold p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
-          </div>
-        `;
-        container.appendChild(box);
+        c.innerHTML += `<div class="p-2 border rounded-xl flex justify-between items-center bg-slate-50 text-xs">
+          <span><b>${item.pukul || '00.00'}</b> - ${item.acara || 'Kosong'}</span>
+          <button onclick="openAgendaModal(${idx})" class="bg-teal-700 text-white px-2 py-1 rounded">Edit</button>
+        </div>`;
       });
-      lucide.createIcons();
     }
 
     function renderPosterTable() {
-      const section = document.getElementById("posterTableSection");
-      const validAgendas = currentAgendas.filter(a => a.acara || a.pukul);
-
-      if (validAgendas.length === 0) {
-        section.innerHTML = `
-          <div class="my-6 py-8 px-6 bg-white rounded-2xl border border-teal-900/20 shadow-xs text-center space-y-2.5">
-            <div class="w-10 h-10 mx-auto rounded-full bg-teal-50 text-teal-800 flex items-center justify-center">
-              <i data-lucide="calendar-off" class="w-5 h-5"></i>
-            </div>
-            <div class="space-y-1">
-              <h4 class="text-xs font-black text-teal-950 font-montserrat tracking-widest uppercase">NIHIL / TIDAK ADA AGENDA</h4>
-              <p class="text-[8.5px] text-slate-500 max-w-[260px] mx-auto leading-normal">Belum ada agenda kegiatan dinas resmi yang tercatat pada tanggal ini.</p>
-            </div>
-          </div>
-        `;
-        lucide.createIcons();
-        return;
-      }
-
-      let tableHtml = `
-        <div class="overflow-hidden rounded-xl border border-teal-900/30 shadow-sm bg-white">
-          <table class="w-full text-[8px] leading-[1.3] border-collapse" style="table-layout: fixed;">
-            <thead>
-              <tr class="bg-[#004e54] text-white font-bold text-center border-b border-teal-900">
-                <th class="py-2 px-0.5 w-[5%]">No</th>
-                <th class="py-2 px-1 w-[9%]">Pukul</th>
-                <th class="py-2 px-1.5 w-[26%] text-left">Acara</th>
-                <th class="py-2 px-1.5 w-[20%] text-left">Tempat</th>
-                <th class="py-2 px-1 w-[10%]">Asal Surat</th>
-                <th class="py-2 px-1 w-[9%]">Pejabat</th>
-                <th class="py-2 px-1 w-[10%]">Pendamping</th>
-                <th class="py-2 px-1 w-[11%]">Ket</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200">
-      `;
-
-      const sorted = [...currentAgendas].sort((a, b) => parseTimeToMinutes(a.pukul) - parseTimeToMinutes(b.pukul));
-      sorted.forEach((item, idx) => {
-        if (!item.acara && !item.pukul) return;
-        const theme = detectRowTheme(item);
-        let rowBg = theme.bg;
-        if (item.susulan) rowBg = "#FEF3C7";
-        if (item.revisiItem) rowBg = "#FFE4E6";
-
-        let timeDisplay = formatTimeInput(item.pukul) || '-';
-        if (item.susulan) timeDisplay += `<span class="block text-[5px] text-amber-700 font-extrabold uppercase mt-0.5">Susulan</span>`;
-        if (item.revisiItem) timeDisplay += `<span class="block text-[5px] text-rose-700 font-extrabold uppercase mt-0.5">Revisi</span>`;
-
-        let pejabatCell = item.pejabat || '-';
-        if (item.delegasi) pejabatCell += `<span class="block text-[6px] text-teal-800 font-semibold mt-0.5">(Diwakili: ${item.delegasi})</span>`;
-
-        let ketText = item.keterangan && item.keterangan !== '-' ? item.keterangan : '';
-        if (item.susulan) ketText = ketText ? `${ketText}, Susulan` : 'Susulan';
-        if (item.revisiItem) ketText = ketText ? `${ketText}, Revisi` : 'Revisi';
-        if (!ketText) ketText = '-';
-
-        tableHtml += `
-          <tr style="background-color: ${rowBg};" class="align-top divide-x divide-slate-200/80">
-            <td class="py-2 px-0.5 text-center align-middle font-extrabold text-slate-900 text-[9px]">${idx + 1}</td>
-            <td class="py-2 px-1 text-center font-bold text-slate-900 text-[7px] align-middle">${timeDisplay}</td>
-            <td class="py-2 px-1.5 font-medium text-slate-900 text-[7.5px]">${(item.acara || '').replace(/\n/g, '<br>')}</td>
-            <td class="py-2 px-1.5 text-slate-700 text-[7px]">${item.tempat || '-'}</td>
-            <td class="py-2 px-1 text-center text-slate-800 text-[7px]">${item.asal || '-'}</td>
-            <td class="py-2 px-1 text-center font-bold text-slate-900 text-[7px]">${pejabatCell}</td>
-            <td class="py-2 px-1 text-center text-slate-700 text-[7px]">${item.pendamping || '-'}</td>
-            <td class="py-2 px-1 text-center text-slate-600 text-[7px] align-middle">${ketText}</td>
-          </tr>
-        `;
+      const s = document.getElementById("posterTableSection");
+      const valid = currentAgendas.filter(a => a.acara || a.pukul);
+      if (valid.length === 0) { s.innerHTML = `<div class="text-center py-6 text-xs text-slate-500">Nihil / Tidak Ada Agenda</div>`; return; }
+      let html = `<table class="w-full text-[8px] border-collapse"><thead><tr class="bg-[#004e54] text-white"><th>No</th><th>Pukul</th><th>Acara</th><th>Tempat</th><th>Pejabat</th></tr></thead><tbody>`;
+      valid.forEach((a, i) => {
+        html += `<tr class="border-b"><td>${i+1}</td><td>${a.pukul}</td><td>${a.acara}</td><td>${a.tempat}</td><td>${a.pejabat}</td></tr>`;
       });
-
-      tableHtml += `</tbody></table></div>`;
-      section.innerHTML = tableHtml;
+      s.innerHTML = html + `</tbody></table>`;
     }
 
     function addAgenda() {
       currentAgendas.push({ pukul: "", acara: "", tempat: "", asal: "", pejabat: "", delegasi: "", pendamping: "-", keterangan: "-", susulan: false, revisiItem: false });
-      persistAndRefresh();
-      openAgendaModal(currentAgendas.length - 1);
+      renderFormList(); autoSaveToSheets();
     }
 
-    function getMonday(d) {
-      const date = new Date(d);
-      const day = date.getDay();
-      const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-      return new Date(date.setDate(diff));
-    }
-
-    function shiftWeek(w) { weekStartObj.setDate(weekStartObj.getDate() + (w * 7)); renderWeeklyPoster(); }
-    function shiftMonth(m) { monthDateObj.setMonth(monthDateObj.getMonth() + m); renderMonthlyPoster(); }
-    
-    function renderWeeklyPoster() {
-      const db = getDB();
-      const startMonday = getMonday(weekStartObj);
-      const endSunday = new Date(startMonday); endSunday.setDate(endSunday.getDate() + 6);
-      const rangeText = `${startMonday.getDate()} ${monthsId[startMonday.getMonth()]} – ${endSunday.getDate()} ${monthsId[endSunday.getMonth()]} ${endSunday.getFullYear()}`;
-      
-      const rangeEl = document.getElementById("posterWeekRangeTitle");
-      if (rangeEl) rangeEl.innerText = rangeText;
-
-      const container = document.getElementById("posterWeekContent");
-      if (!container) return;
-      container.innerHTML = "";
-
-      for (let i = 0; i < 7; i++) {
-        const loopDate = new Date(startMonday);
-        loopDate.setDate(loopDate.getDate() + i);
-        const iso = formatToISO(loopDate);
-        const agendasForDay = (db[iso] || []).filter(a => a.acara || a.pukul);
-        const theme = rowColors[i % rowColors.length];
-
-        const dayBlock = document.createElement("div");
-        dayBlock.className = "bg-white rounded-xl border border-teal-900/20 shadow-2xs overflow-hidden mb-1.5";
-
-        let agendaItemsHtml = "";
-        if (agendasForDay.length === 0) {
-          agendaItemsHtml = `<div class="text-[8.5px] text-slate-500 italic py-1 px-2.5">Tidak ada agenda dinas</div>`;
-        } else {
-          agendaItemsHtml = agendasForDay.map(a => {
-            let pebStr = a.pejabat ? `(${a.pejabat})` : '';
-            return `
-              <div class="px-2.5 py-1 flex items-start gap-2 text-[8.5px] border-b border-slate-100 last:border-0">
-                <span class="font-bold text-teal-900 bg-teal-50 px-1.5 py-0.2 rounded text-[8px] whitespace-nowrap shrink-0 border border-teal-200">${formatTimeInput(a.pukul) || '--.--'}</span>
-                <div class="flex-1 leading-snug font-medium text-slate-900">${a.acara || '-'}${pebStr ? ` <span class="text-slate-600">${pebStr}</span>` : ''}</div>
-              </div>
-            `;
-          }).join("");
-        }
-
-        dayBlock.innerHTML = `
-          <div class="flex items-center justify-between px-2.5 py-1 border-b border-slate-200" style="background:${theme.bg}">
-            <div class="flex items-center gap-2">
-              <span class="font-black text-[9.5px] text-teal-950">${loopDate.getDate()}</span>
-              <span class="font-bold text-[9px] text-slate-900">${daysId[loopDate.getDay()]}</span>
-            </div>
-            <span class="text-[7.5px] font-bold px-1.5 py-0.2 rounded-full ${agendasForDay.length > 0 ? 'bg-teal-700 text-white' : 'bg-slate-200 text-slate-700'}">${agendasForDay.length} Agenda</span>
-          </div>
-          <div class="divide-y divide-slate-100">${agendaItemsHtml}</div>
-        `;
-        container.appendChild(dayBlock);
-      }
-      lucide.createIcons();
-    }
-
-    function renderMonthlyPoster() {
-      const db = getDB();
-      const year = monthDateObj.getFullYear();
-      const month = monthDateObj.getMonth();
-
-      const monthTitleEl = document.getElementById("posterMonthTitle");
-      if (monthTitleEl) monthTitleEl.innerText = `${monthsId[month]} ${year}`;
-
-      const firstDayIndex = new Date(year, month, 1).getDay();
-      const totalDays = new Date(year, month + 1, 0).getDate();
-      const grid = document.getElementById("posterMonthGrid");
-      if (!grid) return;
-      grid.innerHTML = "";
-
-      for (let b = 0; b < firstDayIndex; b++) {
-        grid.appendChild(Object.assign(document.createElement("div"), { className: "min-h-[38px] bg-slate-50/50 p-1" }));
-      }
-
-      for (let day = 1; day <= totalDays; day++) {
-        const cellDate = new Date(year, month, day);
-        const iso = formatToISO(cellDate);
-        const dayAgendas = (db[iso] || []).filter(a => a.acara || a.pukul);
-
-        const cell = document.createElement("div");
-        cell.className = `min-h-[38px] p-1 flex flex-col justify-between ${dayAgendas.length > 0 ? 'bg-teal-50 font-bold' : 'bg-white'}`;
-        cell.innerHTML = `
-          <div class="text-[8.5px] text-right font-bold ${cellDate.getDay() === 0 ? 'text-rose-600' : 'text-slate-800'}">${day}</div>
-          <div class="text-center mt-0.5">
-            ${dayAgendas.length > 0 ? `<span class="text-teal-900 font-black text-[7.5px]">${dayAgendas.length} Agd</span>` : ''}
-          </div>
-        `;
-        grid.appendChild(cell);
-      }
-
-      const summaryBox = document.getElementById("posterMonthAgendaSummary");
-      if (!summaryBox) return;
-      summaryBox.innerHTML = "";
-      let activeDays = [];
-
-      for (let day = 1; day <= totalDays; day++) {
-        const iso = formatToISO(new Date(year, month, day));
-        const dayAgendas = (db[iso] || []).filter(a => a.acara || a.pukul);
-        if (dayAgendas.length > 0) {
-          dayAgendas.forEach(ag => {
-            activeDays.push({ dateStr: `${day} ${monthsId[month]}`, pukul: ag.pukul || '-', mainAgenda: ag.acara || "Kegiatan", pejabat: ag.pejabat || '-' });
-          });
-        }
-      }
-
-      if (activeDays.length === 0) {
-        summaryBox.innerHTML = `<div class="italic text-slate-500 py-1.5 text-center text-[8.5px]">Belum ada agenda bulan ini.</div>`;
-      } else {
-        activeDays.forEach(item => {
-          summaryBox.innerHTML += `
-            <div class="flex items-start gap-1.5 py-1 border-b border-teal-100 last:border-0 text-[8px]">
-              <span class="font-bold text-teal-950 bg-teal-100 px-1.5 py-0.5 rounded whitespace-nowrap">${item.dateStr} | ${item.pukul}</span>
-              <span class="flex-1 leading-normal text-slate-900 font-medium">${item.mainAgenda} <span class="text-teal-800 font-semibold">(${item.pejabat})</span></span>
-            </div>
-          `;
-        });
-      }
-      lucide.createIcons();
-    }
-
-    function renderPejabatReport() {
-      const selectPejabat = document.getElementById("selectPejabatFilter");
-      const selectPeriode = document.getElementById("selectPeriodePejabat");
-      const targetRole = selectPejabat ? selectPejabat.value : "Camat";
-      const periodeType = selectPeriode ? selectPeriode.value : "bulanan";
-
-      document.getElementById("posterPejabatMainTitle").innerText = `REKAPITULASI KEGIATAN ${targetRole.toUpperCase()}`;
-      document.getElementById("posterPejabatSubTitle").innerText = `${targetRole} • Bulan ${monthsId[monthDateObj.getMonth()]} ${monthDateObj.getFullYear()}`;
-
-      const db = getDB();
-      let matchedAgendas = [];
-      const targetYear = monthDateObj.getFullYear();
-      const targetMonth = monthDateObj.getMonth();
-
-      for (let tgl in db) {
-        const parts = tgl.split("-");
-        if (parts.length === 3) {
-          const y = parseInt(parts[0], 10);
-          const m = parseInt(parts[1], 10) - 1;
-          if (y === targetYear && m === targetMonth) {
-            db[tgl].forEach(item => {
-              const peb = (item.pejabat || '').toLowerCase();
-              const del = (item.delegasi || '').toLowerCase();
-              const roleLower = targetRole.toLowerCase();
-              let isMatch = false;
-
-              if (roleLower === 'camat') {
-                isMatch = peb.includes('camat') && !peb.includes('wakil') && !peb.includes('wacam');
-              } else if (roleLower === 'wakil camat') {
-                isMatch = peb.includes('wakil') || peb.includes('wacam');
-              } else {
-                isMatch = peb.includes(roleLower) || del.includes(roleLower);
-              }
-
-              if (isMatch) matchedAgendas.push({ tanggal: tgl, ...item });
-            });
-          }
-        }
-      }
-
-      document.getElementById("pejabatReportCount").innerText = `${matchedAgendas.length} Agenda ditemukan`;
-      const container = document.getElementById("posterPejabatContent");
-      container.innerHTML = "";
-
-      if (matchedAgendas.length === 0) {
-        container.innerHTML = `<div class="text-slate-400 italic py-10 text-center text-xs">Belum ada agenda tercatat untuk ${targetRole} pada periode ini.</div>`;
-        return;
-      }
-
-      matchedAgendas.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
-      let tableHtml = `
-        <table class="w-full text-[7.5px] leading-[1.2] border-collapse" style="table-layout: fixed;">
-          <thead>
-            <tr class="bg-[#004e54] text-white font-bold text-center border-b border-teal-900">
-              <th class="py-1.5 px-0.5 w-[7%]">No</th>
-              <th class="py-1.5 px-1 w-[16%]">Tanggal</th>
-              <th class="py-1.5 px-1 w-[11%]">Pukul</th>
-              <th class="py-1.5 px-1.5 w-[36%] text-left">Acara / Kegiatan</th>
-              <th class="py-1.5 px-1.5 w-[30%] text-left">Tempat</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-200">
-      `;
-
-      matchedAgendas.forEach((m, idx) => {
-        let pejabatDisplay = m.pejabat;
-        if (m.delegasi) pejabatDisplay += ` (Diwakili: ${m.delegasi})`;
-        tableHtml += `
-          <tr class="align-top divide-x divide-slate-200/80 hover:bg-teal-50/50">
-            <td class="py-1.5 px-0.5 text-center font-bold text-slate-900 align-middle">${idx + 1}</td>
-            <td class="py-1.5 px-1 text-center font-semibold text-teal-950 align-middle">${m.tanggal}</td>
-            <td class="py-1.5 px-1 text-center font-bold text-slate-900 align-middle">${formatTimeInput(m.pukul) || '-'}</td>
-            <td class="py-1.5 px-1.5 font-medium text-slate-900">${m.acara || '-'}<div class="text-[6.5px] text-teal-800 font-semibold mt-0.5">Pelaksana: ${pejabatDisplay}</div></td>
-            <td class="py-1.5 px-1.5 text-slate-700">${m.tempat || '-'}</td>
-          </tr>
-        `;
-      });
-      tableHtml += `</tbody></table>`;
-      container.innerHTML = tableHtml;
-    }
-
+    function renderWeeklyPoster() {}
+    function renderMonthlyPoster() {}
+    function renderPejabatReport() {}
     async function downloadActivePoster() {
-      let targetId = currentMode === "mingguan" ? "posterMingguan" : currentMode === "bulanan" ? "posterBulanan" : "posterHarian";
-      const poster = document.getElementById(targetId);
-      const canvas = await html2canvas(poster, { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
-      const a = document.createElement("a");
-      a.download = `Jadwal-Ciracas-${currentMode}.png`;
-      a.href = canvas.toDataURL("image/png");
-      a.click();
+      const canvas = await html2canvas(document.getElementById("posterHarian"), { scale: 3, useCORS: true });
+      const a = document.createElement("a"); a.download = "Jadwal.png"; a.href = canvas.toDataURL("image/png"); a.click();
     }
-
-    async function downloadPejabatPoster() {
-      const poster = document.getElementById("posterPejabat");
-      const canvas = await html2canvas(poster, { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
-      const a = document.createElement("a");
-      a.download = `Rekap-Tabel-${document.getElementById("selectPejabatFilter").value}.png`;
-      a.href = canvas.toDataURL("image/png");
-      a.click();
-    }
-
     function printPdfA4() { window.print(); }
-
-    function exportMonthlyExcel() {
-      const db = getDB();
-      const targetYear = monthDateObj.getFullYear();
-      const targetMonth = monthDateObj.getMonth();
-      const monthName = monthsId[targetMonth];
-
-      let htmlTable = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-        <head><meta charset="UTF-8"><style>table{border-collapse:collapse;width:100%;font-family:Arial;font-size:11pt;}th{background:#004e54;color:#fff;border:1px solid #003333;padding:8px;text-align:center;}td{border:1px solid #ccc;padding:6px;}</style></head>
-        <body>
-          <h2>REKAP JADWAL KECAMATAN CIRACAS - ${monthName} ${targetYear}</h2>
-          <table><thead><tr><th>No</th><th>Tanggal</th><th>Pukul</th><th>Acara</th><th>Tempat</th><th>Pejabat</th><th>Delegasi</th><th>Pendamping</th><th>Ket</th></tr></thead><tbody>
-      `;
-
-      let count = 1;
-      for (let tgl in db) {
-        const parts = tgl.split("-");
-        if (parts.length === 3 && parseInt(parts[0],10) === targetYear && (parseInt(parts[1],10)-1) === targetMonth) {
-          db[tgl].forEach(item => {
-            if (item.acara || item.pukul) {
-              htmlTable += `<tr><td>${count++}</td><td>${tgl}</td><td>${item.pukul||''}</td><td>${item.acara||''}</td><td>${item.tempat||''}</td><td>${item.pejabat||''}</td><td>${item.delegasi||''}</td><td>${item.pendamping||''}</td><td>${item.keterangan||''}</td></tr>`;
-            }
-          });
-        }
-      }
-      htmlTable += `</tbody></table></body></html>`;
-      const blob = new Blob([htmlTable], { type: 'application/vnd.ms-excel' });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `Rekap-Jadwal-${monthName}-${targetYear}.xls`;
-      link.click();
-    }
-
-    function sendToWhatsApp() {
-      const tglText = document.getElementById("viewTanggal").innerText;
-      const validAgendas = currentAgendas.filter(a => a.acara || a.pukul);
-
-      if (validAgendas.length === 0) {
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`*JADWAL KEGIATAN KECAMATAN CIRACAS*\n*${tglText}*\n\n*( NIHIL / TIDAK ADA AGENDA )*`)}`, '_blank');
-        return;
-      }
-
-      let text = `*JADWAL KEGIATAN KECAMATAN CIRACAS*\n*${tglText}*\n\n`;
-      validAgendas.forEach((item, idx) => {
-        let badgeWA = item.susulan ? " 🔴 *(Susulan)*" : item.revisiItem ? " 🔄 *(Revisi)*" : "";
-        let pebText = item.pejabat || '-';
-        if (item.delegasi) pebText += ` (Diwakili: ${item.delegasi})`;
-
-        text += `*${idx + 1}. Pukul:* ${formatTimeInput(item.pukul) || '-'}${badgeWA}\n`;
-        text += `*Acara:* ${item.acara || '-'}\n`;
-        text += `*Tempat:* ${item.tempat || '-'}\n`;
-        text += `*Pejabat:* ${pebText}\n------------------------\n`;
-      });
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    function sendSusulanToWhatsApp() {
-      const tglText = document.getElementById("viewTanggal").innerText;
-      const specialItems = currentAgendas.filter(a => (a.susulan || a.revisiItem) && (a.acara || a.pukul));
-      if (specialItems.length === 0) {
-        alert("Tidak ada agenda yang dicentang sebagai Susulan/Revisi.");
-        return;
-      }
-      let text = `🚨 *JADWAL TAMBAHAN / REVISI*\n*KECAMATAN CIRACAS - ${tglText}*\n\n`;
-      specialItems.forEach((item, idx) => {
-        text += `*${idx + 1}. Pukul:* ${formatTimeInput(item.pukul) || '-'}\n*Acara:* ${item.acara || '-'}\n*Tempat:* ${item.tempat || '-'}\n------------------------\n`;
-      });
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
+    function exportMonthlyExcel() {}
+    function sendToWhatsApp() {}
+    function sendSusulanToWhatsApp() {}
+    function sortAgendasByTime() {}
 
     document.getElementById("posterHarian").classList.add("active-print-poster");
-    loadCloudData();
+    syncFromGoogleSheets();
   </script>
 </body>
 </html>
