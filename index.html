@@ -488,15 +488,8 @@
 
     function saveDB(db) {
       cloudDB = db;
-      // Otomatis unduh file jadwal.json baru untuk di-commit ke GitHub dengan mudah secara mobile
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", "jadwal.json");
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      showToast("File jadwal.json terunduh! Upload ke GitHub untuk update cloud ✓");
+      // Disimpan secara lokal saja saat mengetik tanpa mendownload file
+      localStorage.setItem("ciracas_local_cache", JSON.stringify(db));
     }
 
     function formatTimeInput(val) {
@@ -682,6 +675,21 @@
 
     function closeAgendaModal() {
       document.getElementById("agendaModal").classList.add("hidden");
+      
+      // File jadwal.json HANYA diunduh SEKALI saat Anda klik Selesai & Simpan
+      const db = getDB();
+      db[currentISO] = currentAgendas;
+      cloudDB = db;
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "jadwal.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+
+      showToast("Berhasil! File jadwal.json terunduh untuk di-upload ke GitHub ✓");
     }
 
     function renderFormList() {
