@@ -216,8 +216,7 @@
   </div>
 
   <script>
-    // ** TEMPEL URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI **
-    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbw7WdTsLyZeLpEv7DbeNI5mT4U6PKp4m-lnRymaKCasDJHWCrlmfJCDf7TAcgRgIGgetA/exec";
+    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbyG5sUc9QhBRYsV_K9w2MoOcvh59kURysZ4n72W990Ludjn1d5cRNvFqqs2IWQRL5LOxA/exec";
     
     const DB_KEY = "ciracas_sheets_cache_db";
     const CURRENT_ISO_KEY = "ciracas_active_iso_date";
@@ -235,7 +234,6 @@
 
     const daysId = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const monthsId = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    const rowColors = [{ badge: "#028090", bg: "#F0F8FA" }, { badge: "#00A896", bg: "#EBF7F7" }, { badge: "#E9A024", bg: "#FEF7EA" }];
 
     function detectRowTheme(item) {
       const peb = (item.pejabat || '').toLowerCase();
@@ -318,7 +316,6 @@
       saveDB(db);
 
       try {
-        // Kirim data ke Google Sheets di background
         fetch(SHEETDB_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "DELETE_BY_DATE", tanggal: currentISO }) });
         for (let item of currentAgendas) {
           if (!item.acara && !item.pukul) continue;
