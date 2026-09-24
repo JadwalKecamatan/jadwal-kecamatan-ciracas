@@ -43,13 +43,6 @@
       .active-print-poster { position: absolute; left: 50%; top: 0; transform: translateX(-50%) scale(0.95); width: 540px; margin: 0; page-break-inside: avoid; }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>
-    if (window['pdfjs-dist/build/pdf']) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    }
-  </script>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 pb-24">
 
@@ -89,48 +82,7 @@
     </div>
   </div>
 
-  <!-- MODAL SCAN SURAT -->
-  <div id="uploadModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white w-full max-w-lg rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4 max-h-[92vh] flex flex-col overflow-y-auto">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
-            <i data-lucide="file-scan" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <h3 class="text-sm font-bold text-slate-900">Upload Surat Undangan</h3>
-            <p class="text-[10px] text-slate-500">Foto / File scan surat dinas untuk auto-isi jadwal</p>
-          </div>
-        </div>
-        <button onclick="closeUploadModal()" class="p-1 rounded-full text-slate-400 hover:text-slate-600">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <input type="file" id="pdfFileInput" accept="application/pdf,.pdf" onchange="handleInvitationUpload(event)" class="hidden">
-        <input type="file" id="galleryInput" accept="image/jpeg,image/png,image/webp,image/*" onchange="handleInvitationUpload(event)" class="hidden">
-        <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleInvitationUpload(event)" class="hidden">
-
-        <div class="grid grid-cols-3 gap-2">
-          <div onclick="document.getElementById('pdfFileInput').click()" class="border-2 border-dashed border-rose-300 hover:border-rose-500 bg-rose-50/50 rounded-2xl p-3 text-center cursor-pointer flex flex-col items-center justify-center space-y-1">
-            <i data-lucide="file-text" class="w-5 h-5 text-rose-600"></i>
-            <span class="font-bold text-[11px]">File PDF</span>
-          </div>
-          <div onclick="document.getElementById('galleryInput').click()" class="border-2 border-dashed border-amber-300 hover:border-amber-500 bg-amber-50/50 rounded-2xl p-3 text-center cursor-pointer flex flex-col items-center justify-center space-y-1">
-            <i data-lucide="image" class="w-5 h-5 text-amber-600"></i>
-            <span class="font-bold text-[11px]">Foto Galeri</span>
-          </div>
-          <div onclick="document.getElementById('cameraInput').click()" class="border-2 border-dashed border-emerald-300 hover:border-emerald-500 bg-emerald-50/50 rounded-2xl p-3 text-center cursor-pointer flex flex-col items-center justify-center space-y-1">
-            <i data-lucide="camera" class="w-5 h-5 text-emerald-700"></i>
-            <span class="font-bold text-[11px]">Kamera</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL POP-UP FORM INPUT/EDIT AGENDA -->
+  <!-- MODAL FORM INPUT/EDIT AGENDA -->
   <div id="agendaModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white w-full max-w-lg rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4 max-h-[92vh] flex flex-col overflow-y-auto">
       <div class="flex justify-between items-center pb-2 border-b border-slate-100">
@@ -151,7 +103,7 @@
       <div id="modalFormContent" class="space-y-3 text-xs"></div>
 
       <div class="pt-2 border-t border-slate-100 flex justify-end gap-2">
-        <button onclick="closeAgendaModal()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs">Selesai & Simpan Otomatis</button>
+        <button onclick="closeAgendaModal()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs">Selesai & Simpan</button>
       </div>
     </div>
   </div>
@@ -163,7 +115,7 @@
       <span class="flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> <span id="toastText">Berhasil!</span></span>
     </div>
 
-    <!-- 1. KONTROL TANGGAL & NAVIGASI DINAMIS -->
+    <!-- 1. KONTROL TANGGAL & NAVIGASI -->
     <div id="dateControlBox" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
       <div class="flex items-center justify-between">
         <div>
@@ -180,7 +132,7 @@
         <input type="text" id="editTanggal" value="Senin, 7 September 2026" oninput="updateHeaderManual(this.value)" class="sm:col-span-7 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
       </div>
 
-      <!-- TOMBOL UNDUH & CETAK PDF -->
+      <!-- TOMBOL UNDUH & CETAK -->
       <div class="pt-2 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-2">
         <button onclick="downloadActivePoster()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all">
           <i data-lucide="download" class="w-4 h-4"></i> Unduh PNG
@@ -191,50 +143,33 @@
         <button onclick="sendToWhatsApp()" class="bg-sky-600 hover:bg-sky-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all">
           <i data-lucide="message-square" class="w-4 h-4"></i> Kirim WA
         </button>
-        <button onclick="sendSusulanToWhatsApp()" class="bg-amber-600 hover:bg-amber-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all" title="Kirim Khusus Jadwal Susulan/Revisi">
+        <button onclick="sendSusulanToWhatsApp()" class="bg-amber-600 hover:bg-amber-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all">
           <i data-lucide="bell-ring" class="w-4 h-4"></i> WA Revisi
         </button>
       </div>
     </div>
 
-    <!-- ==================== PANEL OPERATOR TERSEMBUNYI (DILINDUNGI PIN) ==================== -->
+    <!-- ==================== PANEL OPERATOR (PIN: 969798) ==================== -->
     <div id="operatorPanel" class="hidden bg-white p-4 rounded-2xl shadow-md border-2 border-teal-700 space-y-3">
       <div class="flex justify-between items-center pb-2 border-b border-teal-100">
         <div class="flex items-center gap-2">
           <span class="bg-teal-100 text-teal-800 p-1.5 rounded-lg"><i data-lucide="shield-check" class="w-4 h-4"></i></span>
           <div>
             <h3 class="text-xs font-black text-teal-900 uppercase">Panel Khusus Operator</h3>
-            <p class="text-[10px] text-slate-500">Kelola jadwal & sinkronisasi otomatis</p>
+            <p class="text-[10px] text-slate-500">Sinkronisasi & Kelola Jadwal Cloud</p>
           </div>
         </div>
         <button onclick="toggleOperatorPanel()" class="text-slate-400 hover:text-slate-600 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg">Tutup</button>
       </div>
 
-      <!-- STATUS AUTO-SYNC -->
-      <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 text-[11px] text-emerald-900 font-semibold flex items-center justify-between">
-        <span class="flex items-center gap-1.5"><i data-lucide="wifi" class="w-3.5 h-3.5 text-emerald-600"></i> Auto-Sync Google Sheets Aktif</span>
-        <button onclick="syncFromGoogleSheets()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">Segarkan Data</button>
+      <div class="bg-teal-50 p-2.5 rounded-xl border border-teal-200 text-[11px] text-teal-900 font-semibold flex items-center justify-between">
+        <span class="flex items-center gap-1.5"><i data-lucide="cloud" class="w-3.5 h-3.5 text-teal-600"></i> Sinkronisasi Cloud Aktif</span>
+        <button onclick="loadCloudData()" class="bg-teal-700 hover:bg-teal-800 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">Segarkan Data</button>
       </div>
 
-      <!-- FITUR PENCARIAN ARSIP CERDAS -->
-      <div class="bg-teal-50 p-2.5 rounded-xl border border-teal-200 space-y-1.5">
-        <label class="block text-[11px] font-extrabold text-teal-900 flex items-center gap-1">
-          <i data-lucide="search" class="w-3.5 h-3.5"></i> Pencarian Arsip Cerdas (Semua Tanggal):
-        </label>
-        <div class="flex gap-2">
-          <input type="text" id="smartSearchInput" placeholder="Ketik kata kunci (Cth: Monev, Camat, Rapat)..." oninput="runSmartSearch(this.value)" class="flex-1 bg-white border border-teal-300 rounded-lg px-2.5 py-1.5 text-xs">
-          <button onclick="document.getElementById('smartSearchInput').value=''; runSmartSearch('');" class="bg-teal-200 hover:bg-teal-300 text-teal-900 px-2.5 py-1.5 rounded-lg text-xs font-bold">Reset</button>
-        </div>
-        <div id="smartSearchResultBox" class="hidden bg-white rounded-lg border border-teal-200 p-2 max-h-40 overflow-y-auto space-y-1.5 text-[10px]"></div>
-      </div>
-
-      <!-- TOMBOL OPERATOR -->
-      <div class="grid grid-cols-3 gap-2">
-        <button onclick="openUploadModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs flex items-center justify-center gap-1.5">
-          <i data-lucide="camera" class="w-3.5 h-3.5"></i> Scan Surat
-        </button>
+      <div class="grid grid-cols-2 gap-2">
         <button onclick="exportMonthlyExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs flex items-center justify-center gap-1.5">
-          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> Rekap Excel
+          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> Rekap Excel (.xls)
         </button>
         <button onclick="sortAgendasByTime()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs flex items-center justify-center gap-1.5">
           <i data-lucide="arrow-down-up" class="w-3.5 h-3.5"></i> Urutkan Jam
@@ -260,7 +195,7 @@
       <div id="editListContainer" class="space-y-2 pt-2"></div>
     </div>
 
-    <!-- ==================== 1. MODE HARIAN (POSTER UTAMA) ==================== -->
+    <!-- ==================== 1. MODE HARIAN ==================== -->
     <div id="viewHarianContainer" class="space-y-4">
       <div class="flex flex-col items-center">
         <div class="text-[11px] font-bold text-teal-800 uppercase tracking-wider mb-2 self-start px-1 flex items-center gap-1">
@@ -392,7 +327,7 @@
       </div>
     </div>
 
-    <!-- ==================== 4. MODE REKAP PEJABAT (TABEL FORMAL) ==================== -->
+    <!-- ==================== 4. MODE REKAP PEJABAT ==================== -->
     <div id="viewPejabatContainer" class="hidden space-y-4">
       <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
         <div class="flex items-center justify-between flex-wrap gap-2">
@@ -409,18 +344,8 @@
               <option value="Kasi Ekbang">Kasi Ekbang</option>
               <option value="Kasi Kesra">Kasi Kesra</option>
               <option value="Kasubbag Keuangan">Kasubbag Keuangan</option>
-              <option value="Kasubbag PDA">Kasubbag PDA</option>
-              <option value="Kasubbag Umpeg">Kasubbag Umpeg</option>
               <option value="Pak Amril">Pak Amril</option>
-              <option value="Om Bekri">Om Bekri</option>
               <option value="Bendahara">Bendahara</option>
-              <option value="Mbak Adis">Mbak Adis</option>
-              <option value="Mbak Lita">Mbak Lita</option>
-              <option value="Pengurus Barang">Pengurus Barang</option>
-              <option value="Mba Atik">Mba Atik</option>
-              <option value="Bang Yandhi">Bang Yandhi</option>
-              <option value="Rudy">Rudy</option>
-              <option value="Bang Koko">Bang Koko</option>
             </select>
             <select id="selectPeriodePejabat" onchange="renderPejabatReport()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
               <option value="mingguan">Per Minggu</option>
@@ -456,7 +381,6 @@
               </div>
             </div>
 
-            <!-- TABEL REKAPITULASI FORMAL -->
             <div id="posterPejabatContent" class="my-3 overflow-hidden rounded-xl border border-teal-900/30 shadow-xs bg-white flex-1"></div>
 
             <div class="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[7.5px] text-slate-700 font-medium mt-auto">
@@ -476,16 +400,29 @@
   </div>
 
   <script>
-    // URL Google Apps Script Anda
-    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbw7WdTsLyZeLpEv7DbeNI5mT4U6PKp4m-lnRymaKCasDJHWCrlmfJCDf7TAcgRgIGgetA/exec";
-    const DB_KEY = "ciracas_sheets_cache_db";
     const CURRENT_ISO_KEY = "ciracas_active_iso_date";
     const ADMIN_PIN = "969798";
     let isAuthenticated = false;
+    let cloudDB = {};
+
+    async function loadCloudData() {
+      try {
+        const res = await fetch('jadwal.json?t=' + new Date().getTime());
+        if (res.ok) {
+          const data = await res.json();
+          if (data && typeof data === 'object') {
+            cloudDB = data;
+            showToast("Data cloud tersinkron ✓");
+          }
+        }
+      } catch (e) {
+        console.log("Menggunakan cache lokal");
+      }
+      loadDateData(currentISO);
+    }
 
     function toggleOperatorPanel() {
-      const panel = document.getElementById("operatorPanel");
-      panel.classList.toggle("hidden");
+      document.getElementById("operatorPanel").classList.toggle("hidden");
     }
 
     function protectedAction(callback) {
@@ -517,10 +454,9 @@
     ];
 
     const roleThemes = {
-      camat: { badge: "#00a8e8", bg: "#d0f1fc" },
       wakil: { badge: "#10B981", bg: "#D1FAE5" },
       sekcam: { badge: "#ec4899", bg: "#fce7f3" },
-      putih: { badge: "#475569", bg: "#FFFFFF" }
+      camat: { badge: "#00a8e8", bg: "#d0f1fc" }
     };
 
     function detectRowTheme(item) {
@@ -547,27 +483,30 @@
     }
 
     function getDB() {
-      try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; } catch(e) { return {}; }
+      return cloudDB;
     }
 
     function saveDB(db) {
-      localStorage.setItem(DB_KEY, JSON.stringify(db));
+      cloudDB = db;
+      // Otomatis unduh file jadwal.json baru untuk di-commit ke GitHub dengan mudah secara mobile
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "jadwal.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("File jadwal.json terunduh! Upload ke GitHub untuk update cloud ✓");
     }
 
     function formatTimeInput(val) {
       if (!val) return "";
       let clean = String(val).trim().replace(/[^0-9.]/g, '');
       if (clean === "") return val;
-      
-      if (clean.length === 1) {
-        return "0" + clean + ".00";
-      } else if (clean.length === 2 && !clean.includes('.')) {
-        return clean + ".00";
-      } else if (clean.length === 3 && clean.indexOf('.') === 1) {
-        return "0" + clean + "0";
-      } else if (clean.length === 4 && !clean.includes('.')) {
-        return clean.substring(0, 2) + "." + clean.substring(2);
-      }
+      if (clean.length === 1) return "0" + clean + ".00";
+      if (clean.length === 2 && !clean.includes('.')) return clean + ".00";
+      if (clean.length === 3 && clean.indexOf('.') === 1) return "0" + clean + "0";
+      if (clean.length === 4 && !clean.includes('.')) return clean.substring(0, 2) + "." + clean.substring(2);
       return clean.replace(':', '.');
     }
 
@@ -628,13 +567,9 @@
     }
 
     function handleNavShift(dir) {
-      if (currentMode === 'harian') {
-        shiftDay(dir);
-      } else if (currentMode === 'mingguan') {
-        shiftWeek(dir);
-      } else if (currentMode === 'bulanan') {
-        shiftMonth(dir);
-      }
+      if (currentMode === 'harian') shiftDay(dir);
+      else if (currentMode === 'mingguan') shiftWeek(dir);
+      else if (currentMode === 'bulanan') shiftMonth(dir);
     }
 
     function loadDateData(isoStr) {
@@ -652,15 +587,7 @@
       document.getElementById("viewTanggal").innerText = formatted;
 
       const db = getDB();
-      currentAgendas = (db[isoStr] && db[isoStr].length > 0) ? db[isoStr] : [{ pukul: "", acara: "", tempat: "", asal: "", pejabat: "", delegasi: "", pendamping: "-", keterangan: "-", susulan: false, revisiItem: false, photos: [] }];
-
-      currentAgendas.forEach(a => { 
-        if (a.pukul) a.pukul = formatTimeInput(a.pukul); 
-        if (a.susulan === undefined) a.susulan = false;
-        if (a.revisiItem === undefined) a.revisiItem = false;
-        if (a.delegasi === undefined) a.delegasi = "";
-        if (a.photos === undefined) a.photos = [];
-      });
+      currentAgendas = (db[isoStr] && db[isoStr].length > 0) ? db[isoStr] : [{ pukul: "", acara: "", tempat: "", asal: "", pejabat: "", delegasi: "", pendamping: "-", keterangan: "-", susulan: false, revisiItem: false }];
 
       renderFormList();
       renderPosterTable();
@@ -669,94 +596,21 @@
       lucide.createIcons();
     }
 
-    // AUTO-SYNC DARI GOOGLE APPS SCRIPT
-    async function syncFromGoogleSheets() {
-      try {
-        const res = await fetch(SHEETDB_URL, { redirect: "follow" });
-        const rows = await res.json();
-        if (Array.isArray(rows)) {
-          const newDb = {};
-          rows.forEach(r => {
-            const tgl = r.tanggal || "2026-09-07";
-            if (!newDb[tgl]) newDb[tgl] = [];
-            
-            let parsedPhotos = [];
-            try { if (r.photos) parsedPhotos = JSON.parse(r.photos); } catch(e) {}
-
-            newDb[tgl].push({
-              pukul: formatTimeInput(r.pukul || ""),
-              acara: r.acara || "",
-              tempat: r.tempat || "",
-              asal: r.asal || "",
-              pejabat: r.pejabat || "",
-              delegasi: r.delegasi || "",
-              pendamping: r.pendamping || "-",
-              keterangan: r.keterangan || "-",
-              susulan: r.susulan === "TRUE" || r.susulan === true,
-              revisiItem: r.revisiItem === "TRUE" || r.revisiItem === true,
-              photos: parsedPhotos
-            });
-          });
-          saveDB(newDb);
-          loadDateData(currentISO);
-          renderWeeklyPoster();
-          renderMonthlyPoster();
-          showToast("Data berhasil disinkronkan ✓");
-        }
-      } catch (e) {
-        console.error("Gagal sync:", e);
-      }
-    }
-
-    // AUTO-SAVE KE GOOGLE APPS SCRIPT
-    async function autoSaveToSheets() {
-      currentAgendas.forEach(a => { if (a.pukul) a.pukul = formatTimeInput(a.pukul); });
-      
+    function persistAndRefresh() {
       const db = getDB();
       db[currentISO] = currentAgendas;
       saveDB(db);
-
-      try {
-        await fetch(SHEETDB_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "DELETE_BY_DATE", tanggal: currentISO })
-        });
-
-        for (let item of currentAgendas) {
-          if (!item.acara && !item.pukul) continue;
-          await fetch(SHEETDB_URL, {
-            method: "POST",
-            body: JSON.stringify({
-              action: "APPEND",
-              tanggal: currentISO,
-              data: {
-                tanggal: currentISO,
-                pukul: formatTimeInput(item.pukul),
-                acara: item.acara,
-                tempat: item.tempat,
-                asal: item.asal,
-                pejabat: item.pejabat,
-                delegasi: item.delegasi || "",
-                pendamping: item.pendamping,
-                keterangan: item.keterangan,
-                susulan: item.susulan ? "TRUE" : "FALSE",
-                revisiItem: item.revisiItem ? "TRUE" : "FALSE",
-                photos: JSON.stringify(item.photos || [])
-              }
-            })
-          });
-        }
-        showToast("Tersimpan ke Google Sheets ✓");
-      } catch (e) {
-        console.error("Gagal save:", e);
-      }
+      renderFormList();
+      renderPosterTable();
+      renderWeeklyPoster();
+      renderMonthlyPoster();
     }
 
     function showToast(msg) {
       const toast = document.getElementById("saveToast");
       document.getElementById("toastText").innerText = msg;
       toast.classList.remove("hidden");
-      setTimeout(() => { toast.classList.add("hidden"); }, 2000);
+      setTimeout(() => { toast.classList.add("hidden"); }, 3000);
     }
 
     function onCalendarSelect(iso) { if (iso) loadDateData(iso); }
@@ -769,7 +623,6 @@
 
     function toggleRevisionMode(isRev) {
       document.getElementById("posterRevisionBadge").classList.toggle("hidden", !isRev);
-      document.getElementById("revisiStatusBadge").classList.toggle("hidden", !isRev);
     }
 
     function parseTimeToMinutes(t) {
@@ -780,26 +633,7 @@
 
     function sortAgendasByTime() {
       currentAgendas.sort((a, b) => parseTimeToMinutes(a.pukul) - parseTimeToMinutes(b.pukul));
-      renderFormList();
-      renderPosterTable();
-      autoSaveToSheets();
-    }
-
-    function copySingleAgenda(index) {
-      const targetDate = prompt("📅 Masukkan tanggal tujuan (Format: YYYY-MM-DD, Cth: 2026-09-25):", currentISO);
-      if (!targetDate) return;
-
-      const itemToCopy = currentAgendas[index];
-      if (!itemToCopy || (!itemToCopy.acara && !itemToCopy.pukul)) {
-        alert("Agenda kosong tidak dapat disalin.");
-        return;
-      }
-
-      const db = getDB();
-      if (!db[targetDate]) db[targetDate] = [];
-      db[targetDate].push(JSON.parse(JSON.stringify(itemToCopy)));
-      saveDB(db);
-      showToast(`Agenda berhasil disalin ke tanggal ${targetDate} ✓`);
+      persistAndRefresh();
     }
 
     function openAgendaModal(index) {
@@ -809,382 +643,45 @@
       const content = document.getElementById("modalFormContent");
 
       title.innerText = `Edit Agenda #${index + 1}`;
-      
-      let photosHtml = '';
-      if (item.photos && item.photos.length > 0) {
-        item.photos.forEach((p, pIdx) => {
-          photosHtml += `
-            <div class="relative w-14 h-14 rounded-lg border border-slate-300 overflow-hidden shrink-0">
-              <img src="${p}" class="w-full h-full object-cover">
-              <button onclick="removePhoto(${index}, ${pIdx}); openAgendaModal(${index});" class="absolute top-0 right-0 bg-rose-600 text-white text-[10px] px-1 rounded-bl">×</button>
-            </div>
-          `;
-        });
-      }
-
       content.innerHTML = `
         <div class="space-y-3">
           <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
             <label class="flex items-center gap-1 text-[11px] font-bold text-amber-800 cursor-pointer bg-amber-100 px-2.5 py-1 rounded-full border border-amber-300">
-              <input type="checkbox" ${item.susulan ? 'checked' : ''} onchange="currentAgendas[${index}].susulan = this.checked; renderFormList(); renderPosterTable(); renderWeeklyPoster(); renderMonthlyPoster(); autoSaveToSheets();" class="w-3.5 h-3.5 text-amber-600 rounded">
+              <input type="checkbox" ${item.susulan ? 'checked' : ''} onchange="currentAgendas[${index}].susulan = this.checked; persistAndRefresh();" class="w-3.5 h-3.5 text-amber-600 rounded">
               <span>Jadwal Susulan</span>
             </label>
             <label class="flex items-center gap-1 text-[11px] font-bold text-rose-800 cursor-pointer bg-rose-100 px-2.5 py-1 rounded-full border border-rose-300">
-              <input type="checkbox" ${item.revisiItem ? 'checked' : ''} onchange="currentAgendas[${index}].revisiItem = this.checked; renderFormList(); renderPosterTable(); renderWeeklyPoster(); renderMonthlyPoster(); autoSaveToSheets();" class="w-3.5 h-3.5 text-rose-600 rounded">
+              <input type="checkbox" ${item.revisiItem ? 'checked' : ''} onchange="currentAgendas[${index}].revisiItem = this.checked; persistAndRefresh();" class="w-3.5 h-3.5 text-rose-600 rounded">
               <span>Revisi No</span>
             </label>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pukul (Cth: 07.00)</label><input type="text" value="${item.pukul || ''}" oninput="currentAgendas[${index}].pukul = formatTimeInput(this.value); renderPosterTable(); renderWeeklyPoster(); renderMonthlyPoster(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold"></div>
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pejabat Utama</label><input type="text" value="${item.pejabat || ''}" oninput="currentAgendas[${index}].pejabat = this.value; renderPosterTable(); renderWeeklyPoster(); renderMonthlyPoster(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold"></div>
+            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pukul (Cth: 07.00)</label><input type="text" value="${item.pukul || ''}" oninput="currentAgendas[${index}].pukul = formatTimeInput(this.value); persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold"></div>
+            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pejabat Utama</label><input type="text" value="${item.pejabat || ''}" oninput="currentAgendas[${index}].pejabat = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold"></div>
           </div>
 
-          <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pejabat Pengganti / Mewakili (Delegasi)</label><input type="text" value="${item.delegasi || ''}" placeholder="Cth: Diwakili oleh Sekcam / Kasi Pem" oninput="currentAgendas[${index}].delegasi = this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
+          <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pejabat Pengganti / Delegasi</label><input type="text" value="${item.delegasi || ''}" placeholder="Cth: Diwakili Sekcam" oninput="currentAgendas[${index}].delegasi = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
 
-          <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Acara / Kegiatan</label><textarea rows="3" oninput="currentAgendas[${index}].acara = this.value; renderPosterTable(); renderWeeklyPoster(); renderMonthlyPoster(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs">${item.acara || ''}</textarea></div>
+          <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Acara / Kegiatan</label><textarea rows="3" oninput="currentAgendas[${index}].acara = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs">${item.acara || ''}</textarea></div>
 
           <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Tempat</label><input type="text" value="${item.tempat || ''}" oninput="currentAgendas[${index}].tempat = this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Asal Surat</label><input type="text" value="${item.asal || ''}" oninput="currentAgendas[${index}].asal = this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
+            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Tempat</label><input type="text" value="${item.tempat || ''}" oninput="currentAgendas[${index}].tempat = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
+            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Asal Surat</label><input type="text" value="${item.asal || ''}" oninput="currentAgendas[${index}].asal = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pendamping</label><input type="text" value="${item.pendamping || '-'}" oninput="currentAgendas[${index}].pendamping = this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
-            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Keterangan</label><input type="text" value="${item.keterangan || '-'}" oninput="currentAgendas[${index}].keterangan = this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
+            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Pendamping</label><input type="text" value="${item.pendamping || '-'}" oninput="currentAgendas[${index}].pendamping = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
+            <div><label class="block text-[10px] text-slate-500 font-bold mb-1">Keterangan</label><input type="text" value="${item.keterangan || '-'}" oninput="currentAgendas[${index}].keterangan = this.value; persistAndRefresh();" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs"></div>
           </div>
         </div>
       `;
-
       modal.classList.remove("hidden");
       lucide.createIcons();
     }
 
     function closeAgendaModal() {
       document.getElementById("agendaModal").classList.add("hidden");
-      renderFormList();
-      autoSaveToSheets();
-    }
-
-    function runSmartSearch(keyword) {
-      const resBox = document.getElementById("smartSearchResultBox");
-      if (!keyword || keyword.trim() === "") {
-        resBox.classList.add("hidden");
-        resBox.innerHTML = "";
-        return;
-      }
-      const db = getDB();
-      let matches = [];
-      const query = keyword.toLowerCase();
-
-      for (let tgl in db) {
-        db[tgl].forEach(item => {
-          const combined = `${item.acara} ${item.tempat} ${item.pejabat} ${item.delegasi} ${item.pendamping} ${item.asal}`.toLowerCase();
-          if (combined.includes(query)) {
-            matches.push({ tanggal: tgl, ...item });
-          }
-        });
-      }
-
-      if (matches.length === 0) {
-        resBox.classList.remove("hidden");
-        resBox.innerHTML = `<div class="text-slate-400 italic py-1 text-center">Tidak ditemukan arsip dengan kata kunci "${keyword}".</div>`;
-        return;
-      }
-
-      resBox.classList.remove("hidden");
-      resBox.innerHTML = `<div class="font-bold text-teal-900 pb-1 border-b">Ditemukan ${matches.length} agenda:</div>`;
-      matches.forEach(m => {
-        resBox.innerHTML += `
-          <div onclick="loadDateData('${m.tanggal}'); switchView('harian'); toggleOperatorPanel();" class="p-1.5 hover:bg-teal-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
-            <span class="font-bold text-teal-800">[${m.tanggal} - ${m.pukul || '-'}]</span> ${m.acara} <span class="text-slate-500">(${m.pejabat})</span>
-          </div>
-        `;
-      });
-    }
-
-    function matchPejabat(text, targetRole) {
-      if (!text) return false;
-      const t = text.toLowerCase().trim();
-      const role = targetRole.toLowerCase().trim();
-
-      if (role === 'camat') {
-        return t.includes('camat') && !t.includes('wakil') && !t.includes('wacam');
-      } else if (role === 'wakil camat') {
-        return t.includes('wakil') || t.includes('wacam');
-      }
-      return t.includes(role);
-    }
-
-    function renderPejabatReport() {
-      const selectPejabat = document.getElementById("selectPejabatFilter");
-      const selectPeriode = document.getElementById("selectPeriodePejabat");
-      const targetRole = selectPejabat ? selectPejabat.value : "Camat";
-      const periodeType = selectPeriode ? selectPeriode.value : "bulanan";
-
-      const titleText = `REKAPITULASI KEGIATAN ${targetRole.toUpperCase()}`;
-      let subText = `${targetRole} • ${periodeType === 'mingguan' ? 'Periode Minggu Ini' : periodeType === 'bulanan' ? 'Bulan ' + monthsId[monthDateObj.getMonth()] + ' ' + monthDateObj.getFullYear() : 'Tahun ' + monthDateObj.getFullYear()}`;
-
-      document.getElementById("posterPejabatMainTitle").innerText = titleText;
-      document.getElementById("posterPejabatSubTitle").innerText = subText;
-
-      const db = getDB();
-      let matchedAgendas = [];
-
-      const startMon = getMonday(weekStartObj);
-      const endSun = new Date(startMon); endSun.setDate(endSun.getDate() + 6);
-      const targetYear = monthDateObj.getFullYear();
-      const targetMonth = monthDateObj.getMonth();
-
-      for (let tgl in db) {
-        const parts = tgl.split("-");
-        if (parts.length === 3) {
-          const y = parseInt(parts[0], 10);
-          const m = parseInt(parts[1], 10) - 1;
-          const d = parseInt(parts[2], 10);
-          const dateObj = new Date(y, m, d);
-
-          let inRange = false;
-          if (periodeType === 'mingguan') {
-            if (dateObj >= startMon && dateObj <= endSun) inRange = true;
-          } else if (periodeType === 'bulanan') {
-            if (y === targetYear && m === targetMonth) inRange = true;
-          } else if (periodeType === 'tahunan') {
-            if (y === targetYear) inRange = true;
-          }
-
-          if (inRange) {
-            db[tgl].forEach(item => {
-              const peb = item.pejabat || '';
-              const del = item.delegasi || '';
-              if (matchPejabat(peb, targetRole) || matchPejabat(del, targetRole)) {
-                matchedAgendas.push({ tanggal: tgl, ...item });
-              }
-            });
-          }
-        }
-      }
-
-      document.getElementById("pejabatReportCount").innerText = `${matchedAgendas.length} Agenda ditemukan`;
-      const container = document.getElementById("posterPejabatContent");
-      container.innerHTML = "";
-
-      if (matchedAgendas.length === 0) {
-        container.innerHTML = `<div class="text-slate-400 italic py-10 text-center text-xs">Belum ada agenda tercatat untuk ${targetRole} pada periode ini.</div>`;
-        return;
-      }
-
-      matchedAgendas.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
-
-      let tableHtml = `
-        <table class="w-full text-[7.5px] leading-[1.2] border-collapse" style="table-layout: fixed;">
-          <thead>
-            <tr class="bg-[#004e54] text-white font-bold text-center border-b border-teal-900">
-              <th class="py-1.5 px-0.5 w-[7%]">No</th>
-              <th class="py-1.5 px-1 w-[16%]">Tanggal</th>
-              <th class="py-1.5 px-1 w-[11%]">Pukul</th>
-              <th class="py-1.5 px-1.5 w-[36%] text-left">Acara / Kegiatan</th>
-              <th class="py-1.5 px-1.5 w-[30%] text-left">Tempat</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-200">
-      `;
-
-      matchedAgendas.forEach((m, idx) => {
-        let pejabatDisplay = m.pejabat;
-        if (m.delegasi) pejabatDisplay += ` (Diwakili: ${m.delegasi})`;
-
-        tableHtml += `
-          <tr class="align-top divide-x divide-slate-200/80 hover:bg-teal-50/50">
-            <td class="py-1.5 px-0.5 text-center font-bold text-slate-900 align-middle">${idx + 1}</td>
-            <td class="py-1.5 px-1 text-center font-semibold text-teal-950 align-middle">${m.tanggal}</td>
-            <td class="py-1.5 px-1 text-center font-bold text-slate-900 align-middle">${formatTimeInput(m.pukul) || '-'}</td>
-            <td class="py-1.5 px-1.5 font-medium text-slate-900">${m.acara || '-'}<div class="text-[6.5px] text-teal-800 font-semibold mt-0.5">Pelaksana: ${pejabatDisplay}</div></td>
-            <td class="py-1.5 px-1.5 text-slate-700">${m.tempat || '-'}</td>
-          </tr>
-        `;
-      });
-
-      tableHtml += `</tbody></table>`;
-      container.innerHTML = tableHtml;
-    }
-
-    async function downloadPejabatPoster() {
-      const poster = document.getElementById("posterPejabat");
-      const canvas = await html2canvas(poster, { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
-      const a = document.createElement("a");
-      a.download = `Rekap-Tabel-${document.getElementById("selectPejabatFilter").value}.png`;
-      a.href = canvas.toDataURL("image/png");
-      a.click();
-      showToast("Tabel Rekap Pejabat berhasil diunduh! ✓");
-    }
-
-    function printPdfA4() { window.print(); }
-
-    function exportMonthlyExcel() {
-      const db = getDB();
-      const targetYear = monthDateObj.getFullYear();
-      const targetMonth = monthDateObj.getMonth();
-      const monthName = monthsId[targetMonth];
-
-      let htmlTable = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-        <head>
-          <meta charset="UTF-8">
-          <style>
-            table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 11pt; }
-            th { background-color: #004e54; color: #ffffff; font-weight: bold; border: 1px solid #003333; padding: 8px; text-align: center; }
-            td { border: 1px solid #cccccc; padding: 6px; vertical-align: middle; }
-            .center { text-align: center; }
-            .title { font-size: 14pt; font-weight: bold; color: #004e54; margin-bottom: 5px; }
-          </style>
-        </head>
-        <body>
-          <div class="title">REKAP JADWAL KEGIATAN KECAMATAN CIRACAS</div>
-          <div style="font-weight: bold; margin-bottom: 15px;">Bulan: ${monthName} ${targetYear}</div>
-          <table>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Pukul</th>
-                <th>Acara / Kegiatan</th>
-                <th>Tempat</th>
-                <th>Asal Surat</th>
-                <th>Pejabat Utama</th>
-                <th>Pejabat Pengganti (Delegasi)</th>
-                <th>Pendamping</th>
-                <th>Keterangan</th>
-                <th>Status Khusus</th>
-              </tr>
-            </thead>
-            <tbody>
-      `;
-
-      let totalFound = 0;
-      let counter = 1;
-      for (let tgl in db) {
-        const parts = tgl.split("-");
-        if (parts.length === 3) {
-          const y = parseInt(parts[0], 10);
-          const m = parseInt(parts[1], 10) - 1;
-          if (y === targetYear && m === targetMonth) {
-            db[tgl].forEach(item => {
-              if (item.acara || item.pukul) {
-                totalFound++;
-                let statusLabel = "-";
-                if (item.susulan) statusLabel = "Susulan";
-                if (item.revisiItem) statusLabel = statusLabel !== "-" ? "Susulan & Revisi" : "Revisi";
-
-                htmlTable += `
-                  <tr>
-                    <td class="center">${counter++}</td>
-                    <td class="center">${tgl}</td>
-                    <td class="center">${formatTimeInput(item.pukul || '')}</td>
-                    <td>${item.acara || ''}</td>
-                    <td>${item.tempat || ''}</td>
-                    <td>${item.asal || ''}</td>
-                    <td class="center">${item.pejabat || ''}</td>
-                    <td class="center">${item.delegasi || '-'}</td>
-                    <td class="center">${item.pendamping || '-'}</td>
-                    <td class="center">${item.keterangan || '-'}</td>
-                    <td class="center">${statusLabel}</td>
-                  </tr>
-                `;
-              }
-            });
-          }
-        }
-      }
-
-      if (totalFound === 0) {
-        alert(`Tidak ada data jadwal pada bulan ${monthName} ${targetYear}.`);
-        return;
-      }
-
-      htmlTable += `</tbody></table></body></html>`;
-
-      const blob = new Blob([htmlTable], { type: 'application/vnd.ms-excel' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `Rekap-Jadwal-Ciracas-${monthName}-${targetYear}.xls`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast(`Rekap Tabel Excel ${monthName} berhasil diunduh!`);
-    }
-
-    function sendToWhatsApp() {
-      const tglText = document.getElementById("viewTanggal").innerText;
-      const validAgendas = currentAgendas.filter(a => a.acara || a.pukul);
-
-      if (validAgendas.length === 0) {
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`*JADWAL KEGIATAN KECAMATAN CIRACAS*\n*${tglText}*\n\n*( NIHIL / TIDAK ADA AGENDA KEGIATAN DINAS )*\n\n_Disusun melalui Sistem Digital Kecamatan Ciracas_`)}`, '_blank');
-        return;
-      }
-
-      let text = `*JADWAL KEGIATAN KECAMATAN CIRACAS*\n*${tglText}*\n\n`;
-      const sorted = [...validAgendas].sort((a, b) => parseTimeToMinutes(a.pukul) - parseTimeToMinutes(b.pukul));
-      sorted.forEach((item, idx) => {
-        let badgeWA = "";
-        if (item.susulan) badgeWA += " 🔴 *(Susulan)*";
-        if (item.revisiItem) badgeWA += " 🔄 *(Revisi)*";
-
-        let pebText = item.pejabat || '-';
-        if (item.delegasi) pebText += ` (Diwakili: ${item.delegasi})`;
-
-        text += `*${idx + 1}. Pukul:* ${formatTimeInput(item.pukul) || '-'}${badgeWA}\n`;
-        text += `*Acara:* ${item.acara || '-'}\n`;
-        text += `*Tempat:* ${item.tempat || '-'}\n`;
-        text += `*Pejabat:* ${pebText}\n`;
-        if (item.pendamping && item.pendamping !== '-') text += `*Pendamping:* ${item.pendamping}\n`;
-        if (item.asal && item.asal !== '-') text += `*Asal Surat:* ${item.asal}\n`;
-        
-        let ketVal = item.keterangan && item.keterangan !== '-' ? item.keterangan : '';
-        if (item.susulan) ketVal = ketVal ? `${ketVal}, Susulan` : 'Susulan';
-        if (item.revisiItem) ketVal = ketVal ? `${ketVal}, Revisi` : 'Revisi';
-        if (ketVal) text += `*Ket:* ${ketVal}\n`;
-
-        text += `------------------------\n`;
-      });
-      text += `_Disusun melalui Sistem Digital Kecamatan Ciracas_`;
-
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    function sendSusulanToWhatsApp() {
-      const tglText = document.getElementById("viewTanggal").innerText;
-      const specialItems = currentAgendas.filter(a => (a.susulan || a.revisiItem) && (a.acara || a.pukul));
-
-      if (specialItems.length === 0) {
-        alert("Tidak ada agenda yang dicentang sebagai 'Jadwal Susulan' atau 'Revisi Nomor'.");
-        return;
-      }
-
-      let text = `🚨 *INFORMASI PERUBAHAN / JADWAL TAMBAHAN*\n*KECAMATAN CIRACAS - ${tglText}*\n\n`;
-      specialItems.forEach((item, idx) => {
-        let badgeWA = item.revisiItem ? "🔄 *(Revisi)*" : "🔴 *(Susulan)*";
-        let pebText = item.pejabat || '-';
-        if (item.delegasi) pebText += ` (Diwakili: ${item.delegasi})`;
-
-        text += `*${idx + 1}. Pukul:* ${formatTimeInput(item.pukul) || '-'} ${badgeWA}\n`;
-        text += `*Acara:* ${item.acara || '-'}\n`;
-        text += `*Tempat:* ${item.tempat || '-'}\n`;
-        text += `*Pejabat:* ${pebText}\n`;
-        if (item.pendamping && item.pendamping !== '-') text += `*Pendamping:* ${item.pendamping}\n`;
-        if (item.asal && item.asal !== '-') text += `*Asal Surat:* ${item.asal}\n`;
-        
-        let ketVal = item.keterangan && item.keterangan !== '-' ? item.keterangan : '';
-        if (item.susulan) ketVal = ketVal ? `${ketVal}, Susulan` : 'Susulan';
-        if (item.revisiItem) ketVal = ketVal ? `${ketVal}, Revisi` : 'Revisi';
-        if (ketVal) text += `*Ket:* ${ketVal}\n`;
-
-        text += `------------------------\n`;
-      });
-      text += `_Mohon periksa kembali penyesuaian jadwal tersebut. Terima kasih._`;
-
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     function renderFormList() {
@@ -1192,11 +689,11 @@
       container.innerHTML = "";
       currentAgendas.forEach((item, idx) => {
         const theme = detectRowTheme(item);
-        const box = document.createElement("div");
         let borderBg = 'border-slate-200 bg-slate-50';
         if (item.susulan) borderBg = 'border-amber-400 bg-amber-50/60';
         if (item.revisiItem) borderBg = 'border-rose-400 bg-rose-50/60';
 
+        const box = document.createElement("div");
         box.className = `p-2.5 rounded-xl border ${borderBg} flex items-center justify-between text-xs`;
         box.innerHTML = `
           <div class="flex items-center gap-2 overflow-hidden pr-2">
@@ -1210,10 +707,7 @@
             <button onclick="openAgendaModal(${idx})" class="bg-teal-700 hover:bg-teal-800 text-white px-2.5 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1">
               <i data-lucide="edit-3" class="w-3 h-3"></i> Edit
             </button>
-            <button onclick="copySingleAgenda(${idx})" class="bg-amber-600 hover:bg-amber-700 text-white p-1.5 rounded-lg text-[10px]" title="Salin">
-              <i data-lucide="copy" class="w-3 h-3"></i>
-            </button>
-            ${currentAgendas.length > 1 ? `<button onclick="currentAgendas.splice(${idx}, 1); renderFormList(); renderPosterTable(); renderWeeklyPoster(); renderMonthlyPoster(); autoSaveToSheets();" class="text-rose-600 font-bold p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
+            ${currentAgendas.length > 1 ? `<button onclick="currentAgendas.splice(${idx}, 1); persistAndRefresh();" class="text-rose-600 font-bold p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
           </div>
         `;
         container.appendChild(box);
@@ -1233,10 +727,7 @@
             </div>
             <div class="space-y-1">
               <h4 class="text-xs font-black text-teal-950 font-montserrat tracking-widest uppercase">NIHIL / TIDAK ADA AGENDA</h4>
-              <p class="text-[8.5px] text-slate-500 max-w-[260px] mx-auto leading-normal">Pada tanggal ini belum ada agenda kegiatan dinas resmi yang tercatat di Kecamatan Ciracas.</p>
-            </div>
-            <div class="pt-1">
-              <span class="inline-block bg-teal-50 text-teal-800 text-[7.5px] font-bold px-3 py-1 rounded-full border border-teal-200">Kecamatan Ciracas - Siap Melayani</span>
+              <p class="text-[8.5px] text-slate-500 max-w-[260px] mx-auto leading-normal">Belum ada agenda kegiatan dinas resmi yang tercatat pada tanggal ini.</p>
             </div>
           </div>
         `;
@@ -1266,21 +757,16 @@
       sorted.forEach((item, idx) => {
         if (!item.acara && !item.pukul) return;
         const theme = detectRowTheme(item);
-        
         let rowBg = theme.bg;
         if (item.susulan) rowBg = "#FEF3C7";
         if (item.revisiItem) rowBg = "#FFE4E6";
-
-        let numDisplay = `<span class="font-extrabold text-slate-900 text-[9px]">${idx + 1}</span>`;
 
         let timeDisplay = formatTimeInput(item.pukul) || '-';
         if (item.susulan) timeDisplay += `<span class="block text-[5px] text-amber-700 font-extrabold uppercase mt-0.5">Susulan</span>`;
         if (item.revisiItem) timeDisplay += `<span class="block text-[5px] text-rose-700 font-extrabold uppercase mt-0.5">Revisi</span>`;
 
         let pejabatCell = item.pejabat || '-';
-        if (item.delegasi) {
-          pejabatCell += `<span class="block text-[6px] text-teal-800 font-semibold mt-0.5">(Diwakili: ${item.delegasi})</span>`;
-        }
+        if (item.delegasi) pejabatCell += `<span class="block text-[6px] text-teal-800 font-semibold mt-0.5">(Diwakili: ${item.delegasi})</span>`;
 
         let ketText = item.keterangan && item.keterangan !== '-' ? item.keterangan : '';
         if (item.susulan) ketText = ketText ? `${ketText}, Susulan` : 'Susulan';
@@ -1289,16 +775,14 @@
 
         tableHtml += `
           <tr style="background-color: ${rowBg};" class="align-top divide-x divide-slate-200/80">
-            <td class="py-2 px-0.5 text-center align-middle" style="word-break: break-word;">
-              <div class="flex items-center justify-center">${numDisplay}</div>
-            </td>
-            <td class="py-2 px-1 text-center font-bold text-slate-900 text-[7px] align-middle" style="word-break: break-word;">${timeDisplay}</td>
-            <td class="py-2 px-1.5 font-medium text-slate-900 text-[7.5px]" style="word-break: break-word;">${(item.acara || '').replace(/\n/g, '<br>')}</td>
-            <td class="py-2 px-1.5 text-slate-700 text-[7px]" style="word-break: break-word;">${item.tempat || '-'}</td>
-            <td class="py-2 px-1 text-center text-slate-800 text-[7px]" style="word-break: break-word;">${item.asal || '-'}</td>
-            <td class="py-2 px-1 text-center font-bold text-slate-900 text-[7px]" style="word-break: break-word;">${pejabatCell}</td>
-            <td class="py-2 px-1 text-center text-slate-700 text-[7px]" style="word-break: break-word;">${item.pendamping || '-'}</td>
-            <td class="py-2 px-1 text-center text-slate-600 text-[7px] align-middle" style="word-break: break-word;">${ketText}</td>
+            <td class="py-2 px-0.5 text-center align-middle font-extrabold text-slate-900 text-[9px]">${idx + 1}</td>
+            <td class="py-2 px-1 text-center font-bold text-slate-900 text-[7px] align-middle">${timeDisplay}</td>
+            <td class="py-2 px-1.5 font-medium text-slate-900 text-[7.5px]">${(item.acara || '').replace(/\n/g, '<br>')}</td>
+            <td class="py-2 px-1.5 text-slate-700 text-[7px]">${item.tempat || '-'}</td>
+            <td class="py-2 px-1 text-center text-slate-800 text-[7px]">${item.asal || '-'}</td>
+            <td class="py-2 px-1 text-center font-bold text-slate-900 text-[7px]">${pejabatCell}</td>
+            <td class="py-2 px-1 text-center text-slate-700 text-[7px]">${item.pendamping || '-'}</td>
+            <td class="py-2 px-1 text-center text-slate-600 text-[7px] align-middle">${ketText}</td>
           </tr>
         `;
       });
@@ -1308,57 +792,9 @@
     }
 
     function addAgenda() {
-      currentAgendas.push({ pukul: "", acara: "", tempat: "", asal: "", pejabat: "", delegasi: "", pendamping: "-", keterangan: "-", susulan: false, revisiItem: false, photos: [] });
-      renderFormList();
+      currentAgendas.push({ pukul: "", acara: "", tempat: "", asal: "", pejabat: "", delegasi: "", pendamping: "-", keterangan: "-", susulan: false, revisiItem: false });
+      persistAndRefresh();
       openAgendaModal(currentAgendas.length - 1);
-    }
-
-    function openUploadModal() { document.getElementById("uploadModal").classList.remove("hidden"); }
-    function closeUploadModal() { document.getElementById("uploadModal").classList.add("hidden"); }
-
-    async function handleInvitationUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      showToast("Membaca file surat...");
-      closeUploadModal();
-      try {
-        let extractedText = "";
-        if (file.type === "application/pdf") {
-          const reader = new FileReader();
-          reader.onload = async function() {
-            const typedarray = new Uint8Array(this.result);
-            const pdf = await pdfjsLib.getDocument(typedarray).promise;
-            for (let i = 1; i <= pdf.numPages; i++) {
-              const page = await pdf.getPage(i);
-              const textContent = await page.getTextContent();
-              extractedText += textContent.items.map(s => s.str).join(" ") + "\n";
-            }
-            parseScannedText(extractedText);
-          };
-          reader.readAsArrayBuffer(file);
-        } else {
-          const { data: { text } } = await Tesseract.recognize(file, 'ind');
-          parseScannedText(text);
-        }
-      } catch (e) {
-        showToast("Gagal membaca teks surat");
-      }
-    }
-
-    function parseScannedText(text) {
-      showToast("Menganalisis jadwal...");
-      const cleaned = text.replace(/\s+/g, ' ');
-      const timeMatch = cleaned.match(/(?:pukul|jam)\s*[:.]?\s*([0-9]{1,2}[.:][0-9]{2})/i) || cleaned.match(/([0-9]{1,2}[.:][0-9]{2})\s*wib/i);
-      const pukul = timeMatch ? formatTimeInput(timeMatch[1]) : "08.00";
-      const placeMatch = cleaned.match(/(?:tempat|di)\s*[:.]?\s*([^,.-]+(?:[,-]\s*[^,.-]+)?)/i);
-      const tempat = placeMatch ? placeMatch[1].trim().substring(0, 30) : "Aula Kecamatan";
-      const acaraMatch = cleaned.match(/(?:perihal|tentang|acara)\s*[:.]?\s*([^0-9.-]+)/i);
-      const acara = acaraMatch ? acaraMatch[1].trim().substring(0, 60) : cleaned.substring(0, 50);
-
-      currentAgendas.push({ pukul: pukul, acara: acara, tempat: tempat, asal: "Kecamatan", pejabat: "Camat", delegasi: "", pendamping: "-", keterangan: "-", susulan: true, revisiItem: false, photos: [] });
-      renderFormList(); renderPosterTable();
-      autoSaveToSheets();
-      showToast("Berhasil Ekstrak Jadwal Susulan! ✓");
     }
 
     function getMonday(d) {
@@ -1368,15 +804,8 @@
       return new Date(date.setDate(diff));
     }
 
-    function shiftWeek(w) { 
-      weekStartObj.setDate(weekStartObj.getDate() + (w * 7)); 
-      renderWeeklyPoster(); 
-    }
-
-    function shiftMonth(m) { 
-      monthDateObj.setMonth(monthDateObj.getMonth() + m); 
-      renderMonthlyPoster(); 
-    }
+    function shiftWeek(w) { weekStartObj.setDate(weekStartObj.getDate() + (w * 7)); renderWeeklyPoster(); }
+    function shiftMonth(m) { monthDateObj.setMonth(monthDateObj.getMonth() + m); renderMonthlyPoster(); }
     
     function renderWeeklyPoster() {
       const db = getDB();
@@ -1406,11 +835,11 @@
           agendaItemsHtml = `<div class="text-[8.5px] text-slate-500 italic py-1 px-2.5">Tidak ada agenda dinas</div>`;
         } else {
           agendaItemsHtml = agendasForDay.map(a => {
-            let pebStr = a.pejabat ? `(${a.pejabat}${a.delegasi ? ' / Diwakili: ' + a.delegasi : ''})` : '';
+            let pebStr = a.pejabat ? `(${a.pejabat})` : '';
             return `
               <div class="px-2.5 py-1 flex items-start gap-2 text-[8.5px] border-b border-slate-100 last:border-0">
                 <span class="font-bold text-teal-900 bg-teal-50 px-1.5 py-0.2 rounded text-[8px] whitespace-nowrap shrink-0 border border-teal-200">${formatTimeInput(a.pukul) || '--.--'}</span>
-                <div class="flex-1 leading-snug font-medium text-slate-900">${a.acara || '-'}${a.susulan ? ' 🔴 *(Susulan)*' : ''}${a.revisiItem ? ' 🔄 *(Revisi)*' : ''} ${pebStr ? `<span class="text-slate-600 font-normal">${pebStr}</span>` : ''}</div>
+                <div class="flex-1 leading-snug font-medium text-slate-900">${a.acara || '-'}${pebStr ? ` <span class="text-slate-600">${pebStr}</span>` : ''}</div>
               </div>
             `;
           }).join("");
@@ -1437,8 +866,7 @@
       const month = monthDateObj.getMonth();
 
       const monthTitleEl = document.getElementById("posterMonthTitle");
-      const titleStr = `${monthsId[month]} ${year}`;
-      if (monthTitleEl) monthTitleEl.innerText = titleStr;
+      if (monthTitleEl) monthTitleEl.innerText = `${monthsId[month]} ${year}`;
 
       const firstDayIndex = new Date(year, month, 1).getDay();
       const totalDays = new Date(year, month + 1, 0).getDate();
@@ -1476,7 +904,7 @@
         const dayAgendas = (db[iso] || []).filter(a => a.acara || a.pukul);
         if (dayAgendas.length > 0) {
           dayAgendas.forEach(ag => {
-            activeDays.push({ dateStr: `${day} ${monthsId[month]}`, pukul: ag.pukul || '-', mainAgenda: ag.acara || "Kegiatan Dinas", pejabat: ag.pejabat || '-' });
+            activeDays.push({ dateStr: `${day} ${monthsId[month]}`, pukul: ag.pukul || '-', mainAgenda: ag.acara || "Kegiatan", pejabat: ag.pejabat || '-' });
           });
         }
       }
@@ -1496,6 +924,87 @@
       lucide.createIcons();
     }
 
+    function renderPejabatReport() {
+      const selectPejabat = document.getElementById("selectPejabatFilter");
+      const selectPeriode = document.getElementById("selectPeriodePejabat");
+      const targetRole = selectPejabat ? selectPejabat.value : "Camat";
+      const periodeType = selectPeriode ? selectPeriode.value : "bulanan";
+
+      document.getElementById("posterPejabatMainTitle").innerText = `REKAPITULASI KEGIATAN ${targetRole.toUpperCase()}`;
+      document.getElementById("posterPejabatSubTitle").innerText = `${targetRole} • Bulan ${monthsId[monthDateObj.getMonth()]} ${monthDateObj.getFullYear()}`;
+
+      const db = getDB();
+      let matchedAgendas = [];
+      const targetYear = monthDateObj.getFullYear();
+      const targetMonth = monthDateObj.getMonth();
+
+      for (let tgl in db) {
+        const parts = tgl.split("-");
+        if (parts.length === 3) {
+          const y = parseInt(parts[0], 10);
+          const m = parseInt(parts[1], 10) - 1;
+          if (y === targetYear && m === targetMonth) {
+            db[tgl].forEach(item => {
+              const peb = (item.pejabat || '').toLowerCase();
+              const del = (item.delegasi || '').toLowerCase();
+              const roleLower = targetRole.toLowerCase();
+              let isMatch = false;
+
+              if (roleLower === 'camat') {
+                isMatch = peb.includes('camat') && !peb.includes('wakil') && !peb.includes('wacam');
+              } else if (roleLower === 'wakil camat') {
+                isMatch = peb.includes('wakil') || peb.includes('wacam');
+              } else {
+                isMatch = peb.includes(roleLower) || del.includes(roleLower);
+              }
+
+              if (isMatch) matchedAgendas.push({ tanggal: tgl, ...item });
+            });
+          }
+        }
+      }
+
+      document.getElementById("pejabatReportCount").innerText = `${matchedAgendas.length} Agenda ditemukan`;
+      const container = document.getElementById("posterPejabatContent");
+      container.innerHTML = "";
+
+      if (matchedAgendas.length === 0) {
+        container.innerHTML = `<div class="text-slate-400 italic py-10 text-center text-xs">Belum ada agenda tercatat untuk ${targetRole} pada periode ini.</div>`;
+        return;
+      }
+
+      matchedAgendas.sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+      let tableHtml = `
+        <table class="w-full text-[7.5px] leading-[1.2] border-collapse" style="table-layout: fixed;">
+          <thead>
+            <tr class="bg-[#004e54] text-white font-bold text-center border-b border-teal-900">
+              <th class="py-1.5 px-0.5 w-[7%]">No</th>
+              <th class="py-1.5 px-1 w-[16%]">Tanggal</th>
+              <th class="py-1.5 px-1 w-[11%]">Pukul</th>
+              <th class="py-1.5 px-1.5 w-[36%] text-left">Acara / Kegiatan</th>
+              <th class="py-1.5 px-1.5 w-[30%] text-left">Tempat</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+      `;
+
+      matchedAgendas.forEach((m, idx) => {
+        let pejabatDisplay = m.pejabat;
+        if (m.delegasi) pejabatDisplay += ` (Diwakili: ${m.delegasi})`;
+        tableHtml += `
+          <tr class="align-top divide-x divide-slate-200/80 hover:bg-teal-50/50">
+            <td class="py-1.5 px-0.5 text-center font-bold text-slate-900 align-middle">${idx + 1}</td>
+            <td class="py-1.5 px-1 text-center font-semibold text-teal-950 align-middle">${m.tanggal}</td>
+            <td class="py-1.5 px-1 text-center font-bold text-slate-900 align-middle">${formatTimeInput(m.pukul) || '-'}</td>
+            <td class="py-1.5 px-1.5 font-medium text-slate-900">${m.acara || '-'}<div class="text-[6.5px] text-teal-800 font-semibold mt-0.5">Pelaksana: ${pejabatDisplay}</div></td>
+            <td class="py-1.5 px-1.5 text-slate-700">${m.tempat || '-'}</td>
+          </tr>
+        `;
+      });
+      tableHtml += `</tbody></table>`;
+      container.innerHTML = tableHtml;
+    }
+
     async function downloadActivePoster() {
       let targetId = currentMode === "mingguan" ? "posterMingguan" : currentMode === "bulanan" ? "posterBulanan" : "posterHarian";
       const poster = document.getElementById(targetId);
@@ -1506,16 +1015,89 @@
       a.click();
     }
 
+    async function downloadPejabatPoster() {
+      const poster = document.getElementById("posterPejabat");
+      const canvas = await html2canvas(poster, { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
+      const a = document.createElement("a");
+      a.download = `Rekap-Tabel-${document.getElementById("selectPejabatFilter").value}.png`;
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    }
+
+    function printPdfA4() { window.print(); }
+
+    function exportMonthlyExcel() {
+      const db = getDB();
+      const targetYear = monthDateObj.getFullYear();
+      const targetMonth = monthDateObj.getMonth();
+      const monthName = monthsId[targetMonth];
+
+      let htmlTable = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head><meta charset="UTF-8"><style>table{border-collapse:collapse;width:100%;font-family:Arial;font-size:11pt;}th{background:#004e54;color:#fff;border:1px solid #003333;padding:8px;text-align:center;}td{border:1px solid #ccc;padding:6px;}</style></head>
+        <body>
+          <h2>REKAP JADWAL KECAMATAN CIRACAS - ${monthName} ${targetYear}</h2>
+          <table><thead><tr><th>No</th><th>Tanggal</th><th>Pukul</th><th>Acara</th><th>Tempat</th><th>Pejabat</th><th>Delegasi</th><th>Pendamping</th><th>Ket</th></tr></thead><tbody>
+      `;
+
+      let count = 1;
+      for (let tgl in db) {
+        const parts = tgl.split("-");
+        if (parts.length === 3 && parseInt(parts[0],10) === targetYear && (parseInt(parts[1],10)-1) === targetMonth) {
+          db[tgl].forEach(item => {
+            if (item.acara || item.pukul) {
+              htmlTable += `<tr><td>${count++}</td><td>${tgl}</td><td>${item.pukul||''}</td><td>${item.acara||''}</td><td>${item.tempat||''}</td><td>${item.pejabat||''}</td><td>${item.delegasi||''}</td><td>${item.pendamping||''}</td><td>${item.keterangan||''}</td></tr>`;
+            }
+          });
+        }
+      }
+      htmlTable += `</tbody></table></body></html>`;
+      const blob = new Blob([htmlTable], { type: 'application/vnd.ms-excel' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `Rekap-Jadwal-${monthName}-${targetYear}.xls`;
+      link.click();
+    }
+
+    function sendToWhatsApp() {
+      const tglText = document.getElementById("viewTanggal").innerText;
+      const validAgendas = currentAgendas.filter(a => a.acara || a.pukul);
+
+      if (validAgendas.length === 0) {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`*JADWAL KEGIATAN KECAMATAN CIRACAS*\n*${tglText}*\n\n*( NIHIL / TIDAK ADA AGENDA )*`)}`, '_blank');
+        return;
+      }
+
+      let text = `*JADWAL KEGIATAN KECAMATAN CIRACAS*\n*${tglText}*\n\n`;
+      validAgendas.forEach((item, idx) => {
+        let badgeWA = item.susulan ? " 🔴 *(Susulan)*" : item.revisiItem ? " 🔄 *(Revisi)*" : "";
+        let pebText = item.pejabat || '-';
+        if (item.delegasi) pebText += ` (Diwakili: ${item.delegasi})`;
+
+        text += `*${idx + 1}. Pukul:* ${formatTimeInput(item.pukul) || '-'}${badgeWA}\n`;
+        text += `*Acara:* ${item.acara || '-'}\n`;
+        text += `*Tempat:* ${item.tempat || '-'}\n`;
+        text += `*Pejabat:* ${pebText}\n------------------------\n`;
+      });
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function sendSusulanToWhatsApp() {
+      const tglText = document.getElementById("viewTanggal").innerText;
+      const specialItems = currentAgendas.filter(a => (a.susulan || a.revisiItem) && (a.acara || a.pukul));
+      if (specialItems.length === 0) {
+        alert("Tidak ada agenda yang dicentang sebagai Susulan/Revisi.");
+        return;
+      }
+      let text = `🚨 *JADWAL TAMBAHAN / REVISI*\n*KECAMATAN CIRACAS - ${tglText}*\n\n`;
+      specialItems.forEach((item, idx) => {
+        text += `*${idx + 1}. Pukul:* ${formatTimeInput(item.pukul) || '-'}\n*Acara:* ${item.acara || '-'}\n*Tempat:* ${item.tempat || '-'}\n------------------------\n`;
+      });
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
     document.getElementById("posterHarian").classList.add("active-print-poster");
-
-    // Jalankan Sinkronisasi Otomatis saat pertama kali dibuka
-    syncFromGoogleSheets();
-    loadDateData(localStorage.getItem(CURRENT_ISO_KEY) || "2026-09-07");
-
-    // Auto-sync berkala setiap 10 detik
-    setInterval(() => {
-      syncFromGoogleSheets();
-    }, 10000);
+    loadCloudData();
   </script>
 </body>
 </html>
