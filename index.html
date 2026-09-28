@@ -92,7 +92,8 @@
   </div>
 
   <script>
-    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbz3pwbX882nAywKjfG8gc1GxkR0D9_EuVyp8wa1nRYcij_0-_QqsUXCR74B_yqPxdRj/exec";
+    // URL Web App Google Apps Script terbaru yang sudah diperbarui
+    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbzkEoEUWemyytat7D4L-Co3kB4HzurNFzYPH-CpUhA3SEQ4qntndLynKdwrDSVhR_OS/exec";
 
     let currentAgendas = [];
     let currentISO = "";
@@ -119,18 +120,6 @@
       }, 3000);
     }
 
-    // Fungsi normalisasi tanggal agar tahan terhadap berbagai format (ISO, dsb)
-    function normalizeDate(dateStr) {
-      if (!dateStr) return "";
-      let s = String(dateStr).trim();
-      // Jika format dari spreadsheet mengandung waktu (misal: 2026-09-28T...)
-      if (s.includes("T")) {
-        s = s.split("T")[0];
-      }
-      // Jika formatnya sudah YYYY-MM-DD
-      return s;
-    }
-
     async function loadAgendas() {
       showToast("Memuat data terbaru...");
       try {
@@ -138,8 +127,9 @@
         const data = await response.json();
         
         currentAgendas = data.filter(item => {
-          const sheetDate = normalizeDate(item.tanggal);
-          return sheetDate === currentISO;
+          if (!item.tanggal) return false;
+          let rowDate = String(item.tanggal).split("T")[0].trim();
+          return rowDate === currentISO;
         });
 
         renderTable();
