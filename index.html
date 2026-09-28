@@ -119,7 +119,18 @@
       }, 3000);
     }
 
-    // Fungsi untuk menarik data terbaru langsung dari Google Sheets
+    // Fungsi normalisasi tanggal agar tahan terhadap berbagai format (ISO, dsb)
+    function normalizeDate(dateStr) {
+      if (!dateStr) return "";
+      let s = String(dateStr).trim();
+      // Jika format dari spreadsheet mengandung waktu (misal: 2026-09-28T...)
+      if (s.includes("T")) {
+        s = s.split("T")[0];
+      }
+      // Jika formatnya sudah YYYY-MM-DD
+      return s;
+    }
+
     async function loadAgendas() {
       showToast("Memuat data terbaru...");
       try {
@@ -127,8 +138,8 @@
         const data = await response.json();
         
         currentAgendas = data.filter(item => {
-          if (!item.tanggal) return false;
-          return String(item.tanggal).split("T")[0].trim() === currentISO;
+          const sheetDate = normalizeDate(item.tanggal);
+          return sheetDate === currentISO;
         });
 
         renderTable();
@@ -207,11 +218,10 @@
           })
         });
         
-        // Beri jeda 1 detik agar Google Sheets selesai mencatat, lalu tarik data terbaru otomatis
         setTimeout(async () => {
           await loadAgendas();
           showToast("Berhasil disimpan & disinkronkan ✓");
-        }, 1000);
+        }, 1200);
 
       } catch (e) {
         console.error("Gagal menyimpan:", e);
@@ -257,7 +267,7 @@
           setTimeout(async () => {
             await loadAgendas();
             showToast("Berhasil dihapus ✓");
-          }, 1000);
+          }, 1200);
 
         } catch (e) {
           console.error("Gagal sinkron:", e);
