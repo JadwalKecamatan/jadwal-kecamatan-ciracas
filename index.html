@@ -131,15 +131,20 @@
       }, 3000);
     }
 
-    // Mengambil / Memuat Data
+    // Mengambil / Memuat Data (Diperbaiki agar fleksibel membaca format tanggal dari berbagai perangkat)
     async function loadAgendas() {
       showToast("Memuat data...");
       try {
         const response = await fetch(SHEETDB_URL);
         const data = await response.json();
         
-        // Filter data berdasarkan tanggal yang dipilih
-        currentAgendas = data.filter(item => String(item.tanggal).split("T")[0] === currentISO);
+        // Filter data agar mencocokkan tanggal dengan akurat tanpa terpengaruh zona waktu/format
+        currentAgendas = data.filter(item => {
+          if (!item.tanggal) return false;
+          const itemDateStr = String(item.tanggal).split("T")[0].trim();
+          return itemDateStr === currentISO;
+        });
+
         renderTable();
         showToast("Data berhasil dimuat ✓");
       } catch (error) {
@@ -185,7 +190,7 @@
       const pejabat = document.getElementById("inputPejabat").value;
 
       if (!acara && !pukul) {
-        alert("Minimal isi pukul atau acara kegiatan!");
+        alert("Live: Minimal isi pukul atau acara kegiatan!");
         return;
       }
 
@@ -220,14 +225,12 @@
     async function syncToCloud() {
       showToast("Menyimpan ke Google Sheets...");
       try {
-        // Hapus data tanggal ini di cloud terlebih dahulu agar tidak duplikat
         await fetch(SHEETDB_URL, { 
           method: "POST", 
           mode: "no-cors", 
           body: JSON.stringify({ action: "DELETE_BY_DATE", tanggal: currentISO }) 
         });
         
-        // Kirim ulang data yang aktif
         for (let item of currentAgendas) {
           await fetch(SHEETDB_URL, {
             method: "POST", 
