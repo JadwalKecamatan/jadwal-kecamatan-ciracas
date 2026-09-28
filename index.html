@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jadwal Kegiatan Kecamatan Ciracas</title>
-  <!-- Tailwind CSS untuk styling cepat & rapi -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts & FontAwesome -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -15,10 +13,8 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center justify-start p-4">
 
-  <!-- Container Utama -->
   <div class="max-w-4xl w-full bg-white shadow-xl rounded-2xl overflow-hidden p-6 md:p-8">
     
-    <!-- Header / Judul Portal -->
     <div class="border-b pb-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
         <h1 class="text-2xl font-bold text-slate-900">JADWAL KECAMATAN CIRACAS</h1>
@@ -32,7 +28,6 @@
       </div>
     </div>
 
-    <!-- Panel Operator / Input Agenda -->
     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
       <h2 class="text-sm font-semibold text-slate-700 mb-3"><i class="fa-solid fa-pen-to-square mr-1 text-blue-600"></i> Tambah / Edit Agenda</h2>
       
@@ -70,7 +65,6 @@
       </div>
     </div>
 
-    <!-- Pratinjau Tabel Poster / Jadwal -->
     <div>
       <h2 class="text-lg font-bold text-slate-800 mb-3">Jadwal Kegiatan Harian</h2>
       <div class="overflow-x-auto border rounded-xl">
@@ -86,29 +80,24 @@
             </tr>
           </thead>
           <tbody id="agendaTableBody" class="divide-y divide-slate-200 text-sm">
-            <!-- Data akan masuk secara dinamis melalui script -->
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Toast Notifikasi Kecil -->
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm hidden transition-all duration-300">
       Pemberitahuan berhasil
     </div>
 
   </div>
 
-  <!-- JavaScript Penghubung Database & Logika Web -->
   <script>
-    // URL Web App Google Apps Script Anda yang sudah terpasang
     const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbz3pwbX882nAywKjfG8gc1GxkR0D9_EuVyp8wa1nRYcij_0-_QqsUXCR74B_yqPxdRj/exec";
 
     let currentAgendas = [];
     let currentISO = "";
     let editIndex = -1;
 
-    // Inisialisasi tanggal hari ini saat halaman dibuka
     window.addEventListener("DOMContentLoaded", () => {
       const today = new Date().toISOString().split("T")[0];
       document.getElementById("selectedDate").value = today;
@@ -121,7 +110,6 @@
       });
     });
 
-    // Menampilkan Notifikasi Toast
     function showToast(message) {
       const toast = document.getElementById("toast");
       toast.innerText = message;
@@ -131,18 +119,15 @@
       }, 3000);
     }
 
-    // Mengambil / Memuat Data (Diperbaiki agar fleksibel membaca format tanggal dari berbagai perangkat)
     async function loadAgendas() {
       showToast("Memuat data...");
       try {
         const response = await fetch(SHEETDB_URL);
         const data = await response.json();
         
-        // Filter data agar mencocokkan tanggal dengan akurat tanpa terpengaruh zona waktu/format
         currentAgendas = data.filter(item => {
           if (!item.tanggal) return false;
-          const itemDateStr = String(item.tanggal).split("T")[0].trim();
-          return itemDateStr === currentISO;
+          return String(item.tanggal).split("T")[0].trim() === currentISO;
         });
 
         renderTable();
@@ -153,7 +138,6 @@
       }
     }
 
-    // Render tabel di layar
     function renderTable() {
       const tbody = document.getElementById("agendaTableBody");
       tbody.innerHTML = "";
@@ -181,7 +165,6 @@
       });
     }
 
-    // Simpan atau Tambah Agenda baru
     async function saveAgenda() {
       const pukul = document.getElementById("inputPukul").value;
       const acara = document.getElementById("inputAcara").value;
@@ -190,7 +173,7 @@
       const pejabat = document.getElementById("inputPejabat").value;
 
       if (!acara && !pukul) {
-        alert("Live: Minimal isi pukul atau acara kegiatan!");
+        alert("Minimal isi pukul atau acara kegiatan!");
         return;
       }
 
@@ -209,47 +192,28 @@
         photos: ""
       };
 
-      if (editIndex >= 0) {
-        currentAgendas[editIndex] = newItem;
-        editIndex = -1;
-      } else {
-        currentAgendas.push(newItem);
-      }
-
+      currentAgendas.push(newItem);
       clearForm();
       renderTable();
-      await syncToCloud();
-    }
 
-    // Sinkronisasi penuh ke Google Sheets
-    async function syncToCloud() {
       showToast("Menyimpan ke Google Sheets...");
       try {
-        await fetch(SHEETDB_URL, { 
+        await fetch(SHEETDB_URL, {
           method: "POST", 
-          mode: "no-cors", 
-          body: JSON.stringify({ action: "DELETE_BY_DATE", tanggal: currentISO }) 
+          mode: "no-cors",
+          body: JSON.stringify({ 
+            action: "APPEND", 
+            tanggal: currentISO, 
+            data: newItem 
+          })
         });
-        
-        for (let item of currentAgendas) {
-          await fetch(SHEETDB_URL, {
-            method: "POST", 
-            mode: "no-cors",
-            body: JSON.stringify({ 
-              action: "APPEND", 
-              tanggal: currentISO, 
-              data: item 
-            })
-          });
-        }
         showToast("Tersimpan otomatis ke Google Sheets ✓");
       } catch (e) {
-        console.error("Gagal sinkron:", e);
+        console.error("Gagal menyimpan:", e);
         showToast("Gagal menyimpan ke cloud.");
       }
     }
 
-    // Edit Agenda
     function editAgenda(index) {
       const item = currentAgendas[index];
       document.getElementById("inputPukul").value = item.pukul || "";
@@ -261,16 +225,38 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Hapus Agenda
     async function deleteAgenda(index) {
       if (confirm("Yakin ingin menghapus agenda ini?")) {
         currentAgendas.splice(index, 1);
         renderTable();
-        await syncToCloud();
+        
+        // Sinkronisasi ulang data tanggal ini secara aman setelah penghapusan
+        showToast("Memperbarui data...");
+        try {
+          await fetch(SHEETDB_URL, { 
+            method: "POST", 
+            mode: "no-cors", 
+            body: JSON.stringify({ action: "DELETE_BY_DATE", tanggal: currentISO }) 
+          });
+          
+          for (let item of currentAgendas) {
+            await fetch(SHEETDB_URL, {
+              method: "POST", 
+              mode: "no-cors",
+              body: JSON.stringify({ 
+                action: "APPEND", 
+                tanggal: currentISO, 
+                data: item 
+              })
+            });
+          }
+          showToast("Berhasil diperbarui ✓");
+        } catch (e) {
+          console.error("Gagal sinkron:", e);
+        }
       }
     }
 
-    // Bersihkan Form Input
     function clearForm() {
       document.getElementById("inputPukul").value = "";
       document.getElementById("inputAcara").value = "";
