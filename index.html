@@ -119,8 +119,9 @@
       }, 3000);
     }
 
+    // Fungsi untuk menarik data terbaru langsung dari Google Sheets
     async function loadAgendas() {
-      showToast("Memuat data...");
+      showToast("Memuat data terbaru...");
       try {
         const response = await fetch(SHEETDB_URL);
         const data = await response.json();
@@ -131,7 +132,7 @@
         });
 
         renderTable();
-        showToast("Data berhasil dimuat ✓");
+        showToast("Data dimuat dari Cloud ✓");
       } catch (error) {
         console.error("Gagal memuat:", error);
         showToast("Gagal terhubung ke Google Sheets!");
@@ -192,11 +193,9 @@
         photos: ""
       };
 
-      currentAgendas.push(newItem);
       clearForm();
-      renderTable();
-
       showToast("Menyimpan ke Google Sheets...");
+
       try {
         await fetch(SHEETDB_URL, {
           method: "POST", 
@@ -207,7 +206,13 @@
             data: newItem 
           })
         });
-        showToast("Tersimpan otomatis ke Google Sheets ✓");
+        
+        // Beri jeda 1 detik agar Google Sheets selesai mencatat, lalu tarik data terbaru otomatis
+        setTimeout(async () => {
+          await loadAgendas();
+          showToast("Berhasil disimpan & disinkronkan ✓");
+        }, 1000);
+
       } catch (e) {
         console.error("Gagal menyimpan:", e);
         showToast("Gagal menyimpan ke cloud.");
@@ -228,10 +233,8 @@
     async function deleteAgenda(index) {
       if (confirm("Yakin ingin menghapus agenda ini?")) {
         currentAgendas.splice(index, 1);
-        renderTable();
         
-        // Sinkronisasi ulang data tanggal ini secara aman setelah penghapusan
-        showToast("Memperbarui data...");
+        showToast("Memperbarui data di cloud...");
         try {
           await fetch(SHEETDB_URL, { 
             method: "POST", 
@@ -250,7 +253,12 @@
               })
             });
           }
-          showToast("Berhasil diperbarui ✓");
+
+          setTimeout(async () => {
+            await loadAgendas();
+            showToast("Berhasil dihapus ✓");
+          }, 1000);
+
         } catch (e) {
           console.error("Gagal sinkron:", e);
         }
