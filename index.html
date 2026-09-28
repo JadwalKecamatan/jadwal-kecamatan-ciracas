@@ -92,8 +92,8 @@
   </div>
 
   <script>
-    // URL Web App Google Apps Script terbaru yang sudah diperbarui
-    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbzkEoEUWemyytat7D4L-Co3kB4HzurNFzYPH-CpUhA3SEQ4qntndLynKdwrDSVhR_OS/exec";
+    // URL Web App terbaru yang Anda berikan
+    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbzClABpAtQOUV8_si_M0TiUj4b51RJ2qpHIaF54mFGHtiSdvUY-koAvRAFMVt86-OUd/exec";
 
     let currentAgendas = [];
     let currentISO = "";
@@ -211,7 +211,7 @@
         setTimeout(async () => {
           await loadAgendas();
           showToast("Berhasil disimpan & disinkronkan ✓");
-        }, 1200);
+        }, 1500);
 
       } catch (e) {
         console.error("Gagal menyimpan:", e);
@@ -257,7 +257,7 @@
           setTimeout(async () => {
             await loadAgendas();
             showToast("Berhasil dihapus ✓");
-          }, 1200);
+          }, 1500);
 
         } catch (e) {
           console.error("Gagal sinkron:", e);
