@@ -2,399 +2,280 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Portal Resmi Jadwal Kegiatan Kecamatan Ciracas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Kegiatan Kecamatan Ciracas</title>
+  <!-- Tailwind CSS untuk styling cepat & rapi -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts & FontAwesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-    .font-montserrat { font-family: 'Montserrat', sans-serif; }
-    .poster-box {
-      width: 540px;
-      min-height: 860px;
-      height: auto;
-      background: radial-gradient(120% 70% at 50% 0%, #E6F4F1 0%, #F8FAF9 45%, #EDF7F4 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      border: 1.5px solid #004D40;
-      position: relative;
-      box-sizing: border-box;
-      margin: 0 auto;
-      overflow: hidden;
-      padding: 20px;
-    }
-    .poster-box::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 6px;
-      background: linear-gradient(90deg, #004D40 0%, #00897B 50%, #F59E0B 100%);
-    }
-    .poster-wrapper { width: 100%; overflow-x: auto; padding: 4px 0; }
-    @media print {
-      body * { visibility: hidden; }
-      .active-print-poster, .active-print-poster * { visibility: visible; }
-      .active-print-poster { position: absolute; left: 50%; top: 0; transform: translateX(-50%) scale(0.95); width: 540px; margin: 0; page-break-inside: avoid; }
-    }
+    body { font-family: 'Inter', sans-serif; }
   </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800 pb-24">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center justify-start p-4">
 
-  <div class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 px-4 py-3 shadow-xs">
-    <div class="max-w-2xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-teal-700 flex items-center justify-center text-white shadow-sm">
-          <i data-lucide="calendar-check" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h1 class="text-xs sm:text-sm font-black text-slate-900 leading-tight font-montserrat">JADWAL KECAMATAN CIRACAS</h1>
-          <p class="text-[10px] text-teal-700 font-semibold">Portal Informasi & Dokumen Resmi Dinas</p>
-        </div>
-      </div>
-      <button onclick="protectedAction(toggleOperatorPanel)" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1 transition-all">
-        <i data-lucide="settings" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Panel Operator</span>
-      </button>
-    </div>
-
-    <div class="max-w-2xl mx-auto mt-3 grid grid-cols-4 gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-[11px] font-bold text-center">
-      <button id="tabHarian" onclick="switchView('harian')" class="py-2 rounded-lg bg-teal-700 text-white shadow-xs flex items-center justify-center gap-1">Harian</button>
-      <button id="tabMingguan" onclick="switchView('mingguan')" class="py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1">Mingguan</button>
-      <button id="tabBulanan" onclick="switchView('bulanan')" class="py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1">Bulanan</button>
-      <button id="tabPejabat" onclick="switchView('pejabat')" class="py-2 rounded-lg text-slate-600 hover:bg-white flex items-center justify-center gap-1">Pejabat</button>
-    </div>
-  </div>
-
-  <div id="agendaModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white w-full max-w-lg rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4 max-h-[92vh] flex flex-col overflow-y-auto">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-100">
-        <h3 id="modalTitle" class="text-sm font-bold text-slate-900">Form Agenda Kegiatan</h3>
-        <button onclick="closeAgendaModal()" class="p-1 rounded-full text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <div id="modalFormContent" class="space-y-3 text-xs"></div>
-      <div class="pt-2 border-t border-slate-100 flex justify-end">
-        <button onclick="closeAgendaModal()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-xs">Selesai & Simpan ke Cloud</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="max-w-xl mx-auto p-3 sm:p-4 space-y-5">
-    <div id="saveToast" class="hidden bg-emerald-50 border border-emerald-300 text-emerald-800 px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between shadow-sm">
-      <span class="flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> <span id="toastText">Berhasil!</span></span>
-    </div>
-
-    <div id="dateControlBox" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
-      <div class="flex items-center justify-between">
-        <div>
-          <span id="navigasiLabelTitle" class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider block">Navigasi Tanggal</span>
-          <span id="labelHeaderTanggal" class="text-sm font-bold text-teal-900">Pilih Tanggal Agenda</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-          <button id="btnPrev" onclick="handleNavShift(-1)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1.5 rounded-xl text-xs font-bold">Kemarin</button>
-          <button id="btnNext" onclick="handleNavShift(1)" class="bg-teal-700 hover:bg-teal-800 text-white px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-xs">Besok</button>
-        </div>
-      </div>
-      <div id="datePickerRow" class="grid grid-cols-1 sm:grid-cols-12 gap-2">
-        <input type="date" id="nativeDatePicker" onchange="onCalendarSelect(this.value)" class="sm:col-span-5 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold">
-        <input type="text" id="editTanggal" value="Senin, 7 September 2026" oninput="updateHeaderManual(this.value)" class="sm:col-span-7 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
-      </div>
-
-      <div class="pt-2 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <button onclick="downloadActivePoster()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5"><i data-lucide="download" class="w-4 h-4"></i> Unduh PNG</button>
-        <button onclick="printPdfA4()" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5"><i data-lucide="printer" class="w-4 h-4"></i> Cetak PDF</button>
-        <button onclick="sendToWhatsApp()" class="bg-sky-600 hover:bg-sky-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5"><i data-lucide="message-square" class="w-4 h-4"></i> Kirim WA</button>
-        <button onclick="sendSusulanToWhatsApp()" class="bg-amber-600 hover:bg-amber-700 text-white py-2.5 px-3 rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-1.5"><i data-lucide="bell-ring" class="w-4 h-4"></i> WA Revisi</button>
-      </div>
-    </div>
-
-    <div id="operatorPanel" class="hidden bg-white p-4 rounded-2xl shadow-md border-2 border-teal-700 space-y-3">
-      <div class="flex justify-between items-center pb-2 border-b border-teal-100">
-        <h3 class="text-xs font-black text-teal-900 uppercase">Panel Khusus Operator</h3>
-        <button onclick="toggleOperatorPanel()" class="text-slate-400 hover:text-slate-600 text-xs font-bold px-2.5 py-1 bg-slate-100 rounded-lg">Tutup</button>
-      </div>
-
-      <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 text-[11px] text-emerald-900 font-semibold flex items-center justify-between">
-        <span class="flex items-center gap-1.5"><i data-lucide="wifi" class="w-3.5 h-3.5 text-emerald-600"></i> Google Sheets Cloud Aktif</span>
-        <button onclick="syncFromGoogleSheets()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">Segarkan Data</button>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2">
-        <button onclick="exportMonthlyExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs">Rekap Excel (.xls)</button>
-        <button onclick="sortAgendasByTime()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs">Urutkan Jam</button>
-      </div>
-      <button onclick="addAgenda()" class="w-full bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold p-2.5 rounded-xl shadow-xs">Tambah Baris Agenda Baru</button>
-
-      <div id="editListContainer" class="space-y-2 pt-2"></div>
-    </div>
-
-    <!-- TAMPILAN HARIAN -->
-    <div id="viewHarianContainer" class="space-y-4">
-      <div class="flex flex-col items-center">
-        <div class="poster-wrapper">
-          <div id="posterHarian" class="poster-box active-print-poster rounded-2xl shadow-xl border border-teal-900/20 text-slate-900">
-            <div>
-              <div class="flex items-center gap-3 border-l-4 border-teal-700 pl-3.5 py-0.5">
-                <div>
-                  <span class="text-[8px] font-extrabold tracking-[0.2em] text-slate-500 uppercase block">PEMERINTAH KOTA ADMINISTRASI JAKARTA TIMUR</span>
-                  <h3 class="text-xl font-black text-teal-950 tracking-wide font-montserrat uppercase leading-none mt-0.5">KECAMATAN CIRACAS</h3>
-                  <span class="text-[7.5px] font-bold tracking-widest text-teal-700 uppercase block mt-0.5">Santun, Aman, Nyaman, Tentram, Rapi, Indah</span>
-                </div>
-              </div>
-              <div class="mt-3.5 h-[1px] w-full bg-teal-900/15"></div>
-              <div class="mt-3 text-left relative flex items-baseline justify-between">
-                <div>
-                  <h2 class="text-[18px] font-black tracking-wider font-montserrat uppercase text-teal-950 leading-none">JADWAL KEGIATAN</h2>
-                  <span id="viewTanggal" class="text-[11px] font-bold text-teal-800 tracking-wide font-montserrat uppercase mt-1 block">Senin, 7 September 2026</span>
-                </div>
-              </div>
-            </div>
-            <div id="posterTableSection" class="my-3"></div>
-            <div class="pt-3 border-t border-slate-200/80 flex items-center justify-between text-[7.5px] text-slate-700 font-medium mt-auto">
-              <div class="flex items-center gap-1 font-black text-teal-950 tracking-wider"><i data-lucide="award" class="w-3 h-3 text-amber-500"></i><span>BerAKHLAK</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAMPILAN MINGGUAN -->
-    <div id="viewMingguanContainer" class="hidden space-y-4">
-      <div class="flex flex-col items-center">
-        <div class="poster-wrapper">
-          <div id="posterMingguan" class="poster-box rounded-2xl shadow-xl border border-teal-900/20 text-slate-900">
-            <div>
-              <h3 class="text-xl font-black text-teal-950 font-montserrat uppercase">KECAMATAN CIRACAS</h3>
-              <h2 class="text-[18px] font-black font-montserrat uppercase text-teal-950 mt-1">AGENDA MINGGUAN</h2>
-              <span id="posterWeekRangeTitle" class="text-[11px] font-bold text-teal-800 uppercase block mt-1">Senin - Minggu</span>
-            </div>
-            <div id="posterWeekContent" class="w-full my-2 space-y-1.5 flex-1"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAMPILAN BULANAN -->
-    <div id="viewBulananContainer" class="hidden space-y-4">
-      <div class="flex flex-col items-center">
-        <div class="poster-wrapper">
-          <div id="posterBulanan" class="poster-box rounded-2xl shadow-xl border border-teal-900/20 text-slate-900">
-            <div>
-              <h3 class="text-xl font-black text-teal-950 font-montserrat uppercase">KECAMATAN CIRACAS</h3>
-              <h2 class="text-[18px] font-black font-montserrat uppercase text-teal-950 mt-1">KALENDER KEGIATAN</h2>
-              <span id="posterMonthTitle" class="text-[11px] font-bold text-teal-800 uppercase block mt-1">September 2026</span>
-            </div>
-            <div class="my-2 bg-white rounded-xl border border-teal-900/30 overflow-hidden shadow-xs">
-              <div class="grid grid-cols-7 gap-0 text-center font-bold text-[8px] bg-[#004e54] text-white py-1"><div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div></div>
-              <div id="posterMonthGrid" class="grid grid-cols-7 gap-0 text-[8px] divide-x divide-y divide-slate-200"></div>
-            </div>
-            <div id="posterMonthAgendaSummary" class="space-y-1 text-slate-800 text-[8px] max-h-[190px] overflow-y-auto"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAMPILAN PEJABAT -->
-    <div id="viewPejabatContainer" class="hidden space-y-4">
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
-        <select id="selectPejabatFilter" onchange="renderPejabatReport()" class="bg-teal-50 border border-teal-300 rounded-xl px-3 py-2 text-xs font-bold text-teal-950 w-full">
-          <option value="Camat">Camat</option>
-          <option value="Wakil Camat">Wakil Camat</option>
-          <option value="Sekcam">Sekcam</option>
-        </select>
-      </div>
-      <div class="flex flex-col items-center">
-        <div class="poster-wrapper">
-          <div id="posterPejabat" class="poster-box rounded-2xl shadow-xl border border-teal-900/20 text-slate-900">
-            <h2 id="posterPejabatMainTitle" class="text-[16px] font-black font-montserrat uppercase text-teal-950">REKAPITULASI KEGIATAN</h2>
-            <div id="posterPejabatContent" class="my-3 overflow-hidden rounded-xl border border-teal-900/30 bg-white flex-1"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbyG5sUc9QhBRYsV_K9w2MoOcvh59kURysZ4n72W990Ludjn1d5cRNvFqqs2IWQRL5LOxA/exec";
+  <!-- Container Utama -->
+  <div class="max-w-4xl w-full bg-white shadow-xl rounded-2xl overflow-hidden p-6 md:p-8">
     
-    const DB_KEY = "ciracas_sheets_cache_db";
-    const CURRENT_ISO_KEY = "ciracas_active_iso_date";
-    const ADMIN_PIN = "969798";
-    let isAuthenticated = false;
+    <!-- Header / Judul Portal -->
+    <div class="border-b pb-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">JADWAL KECAMATAN CIRACAS</h1>
+        <p class="text-sm text-slate-500">Portal Informasi & Dokumen Resmi Dinas</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="date" id="selectedDate" class="border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+        <button onclick="loadAgendas()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+          <i class="fa-solid fa-rotate-right mr-1"></i> Muat
+        </button>
+      </div>
+    </div>
 
-    function toggleOperatorPanel() { document.getElementById("operatorPanel").classList.toggle("hidden"); }
-
-    function protectedAction(callback) {
-      if (isAuthenticated) { callback(); return; }
-      const inputPin = prompt("🔐 Masukkan PIN Operator Kecamatan:");
-      if (inputPin === ADMIN_PIN) { isAuthenticated = true; showToast("Akses Diterima ✓"); callback(); }
-      else if (inputPin !== null) { alert("PIN Salah!"); }
-    }
-
-    const daysId = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    const monthsId = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-
-    function detectRowTheme(item) {
-      const peb = (item.pejabat || '').toLowerCase();
-      if (peb.includes("wakil")) return { badge: "#10B981", bg: "#D1FAE5" };
-      if (peb.includes("sekcam")) return { badge: "#ec4899", bg: "#fce7f3" };
-      if (peb.includes("camat")) return { badge: "#00a8e8", bg: "#d0f1fc" };
-      return { badge: "#475569", bg: "#FFFFFF" };
-    }
-
-    let currentMode = "harian", currentISO = "2026-09-07", currentDateObj = new Date("2026-09-07T00:00:00"), currentAgendas = [];
-    let weekStartObj = new Date("2026-09-07T00:00:00"), monthDateObj = new Date("2026-09-07T00:00:00");
-
-    function formatDateToIndonesian(d) { return `${daysId[d.getDay()]}, ${d.getDate()} ${monthsId[d.getMonth()]} ${d.getFullYear()}`; }
-    function formatToISO(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
-    function getDB() { try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; } catch(e) { return {}; } }
-    function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
-
-    function formatTimeInput(val) {
-      if (!val) return "";
-      let clean = String(val).trim().replace(/[^0-9.]/g, '');
-      if (clean.length === 1) return "0" + clean + ".00";
-      if (clean.length === 2 && !clean.includes('.')) return clean + ".00";
-      if (clean.length === 4 && !clean.includes('.')) return clean.substring(0, 2) + "." + clean.substring(2);
-      return clean.replace(':', '.');
-    }
-
-    function switchView(mode) {
-      currentMode = mode;
-      ["viewHarianContainer", "viewMingguanContainer", "viewBulananContainer", "viewPejabatContainer"].forEach(id => document.getElementById(id).classList.add("hidden"));
-      document.getElementById("dateControlBox").classList.toggle("hidden", mode === 'pejabat');
+    <!-- Panel Operator / Input Agenda -->
+    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+      <h2 class="text-sm font-semibold text-slate-700 mb-3"><i class="fa-solid fa-pen-to-square mr-1 text-blue-600"></i> Tambah / Edit Agenda</h2>
       
-      if (mode === 'harian') { document.getElementById("viewHarianContainer").classList.remove("hidden"); loadDateData(currentISO); }
-      else if (mode === 'mingguan') { document.getElementById("viewMingguanContainer").classList.remove("hidden"); renderWeeklyPoster(); }
-      else if (mode === 'bulanan') { document.getElementById("viewBulananContainer").classList.remove("hidden"); renderMonthlyPoster(); }
-      else if (mode === 'pejabat') { document.getElementById("viewPejabatContainer").classList.remove("hidden"); renderPejabatReport(); }
-      lucide.createIcons();
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Pukul</label>
+          <input type="text" id="inputPukul" placeholder="Contoh: 08.00 - Selesai" class="w-full border rounded-lg px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-medium text-slate-600 mb-1">Acara / Kegiatan</label>
+          <input type="text" id="inputAcara" placeholder="Nama kegiatan..." class="w-full border rounded-lg px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Tempat</label>
+          <input type="text" id="inputTempat" placeholder="Lokasi kegiatan..." class="w-full border rounded-lg px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Asal Undangan / Instansi</label>
+          <input type="text" id="inputAsal" placeholder="Asal instansi..." class="w-full border rounded-lg px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">Pejabat / Disposisi</label>
+          <input type="text" id="inputPejabat" placeholder="Camat / Wakamat / Kasi..." class="w-full border rounded-lg px-3 py-2 text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition">Reset</button>
+        <button onclick="saveAgenda()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition shadow-sm">
+          <i class="fa-solid fa-plus mr-1"></i> Simpan Agenda
+        </button>
+      </div>
+    </div>
+
+    <!-- Pratinjau Tabel Poster / Jadwal -->
+    <div>
+      <h2 class="text-lg font-bold text-slate-800 mb-3">Jadwal Kegiatan Harian</h2>
+      <div class="overflow-x-auto border rounded-xl">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-800 text-white text-xs uppercase tracking-wider">
+              <th class="p-3 w-12 text-center">No</th>
+              <th class="p-3 w-32">Pukul</th>
+              <th class="p-3">Acara</th>
+              <th class="p-3 w-40">Tempat</th>
+              <th class="p-3 w-32">Pejabat</th>
+              <th class="p-3 w-20 text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="agendaTableBody" class="divide-y divide-slate-200 text-sm">
+            <!-- Data akan masuk secara dinamis melalui script -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Toast Notifikasi Kecil -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm hidden transition-all duration-300">
+      Pemberitahuan berhasil
+    </div>
+
+  </div>
+
+  <!-- JavaScript Penghubung Database & Logika Web -->
+  <script>
+    // URL Web App Google Apps Script Anda yang sudah terpasang
+    const SHEETDB_URL = "https://script.google.com/macros/s/AKfycbz3pwbX882nAywKjfG8gc1GxkR0D9_EuVyp8wa1nRYcij_0-_QqsUXCR74B_yqPxdRj/exec";
+
+    let currentAgendas = [];
+    let currentISO = "";
+    let editIndex = -1;
+
+    // Inisialisasi tanggal hari ini saat halaman dibuka
+    window.addEventListener("DOMContentLoaded", () => {
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("selectedDate").value = today;
+      currentISO = today;
+      loadAgendas();
+
+      document.getElementById("selectedDate").addEventListener("change", (e) => {
+        currentISO = e.target.value;
+        loadAgendas();
+      });
+    });
+
+    // Menampilkan Notifikasi Toast
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.innerText = message;
+      toast.classList.remove("hidden");
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 3000);
     }
 
-    function loadDateData(isoStr) {
-      currentISO = isoStr;
-      const parts = isoStr.split("-");
-      currentDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-      weekStartObj = new Date(currentDateObj); monthDateObj = new Date(currentDateObj);
-
-      document.getElementById("nativeDatePicker").value = isoStr;
-      document.getElementById("editTanggal").value = formatDateToIndonesian(currentDateObj);
-      document.getElementById("viewTanggal").innerText = formatDateToIndonesian(currentDateObj);
-
-      const db = getDB();
-      currentAgendas = (db[isoStr] && db[isoStr].length > 0) ? db[isoStr] : [{ pukul: "", acara: "", tempat: "", asal: "", pejabat: "", delegasi: "", pendamping: "-", keterangan: "-", susulan: false, revisiItem: false }];
-      renderFormList(); renderPosterTable();
-    }
-
-    async function syncFromGoogleSheets() {
+    // Mengambil / Memuat Data
+    async function loadAgendas() {
+      showToast("Memuat data...");
       try {
-        const res = await fetch(SHEETDB_URL);
-        const rows = await res.json();
-        if (Array.isArray(rows)) {
-          const newDb = {};
-          rows.forEach(r => {
-            const tgl = r.tanggal || "2026-09-07";
-            if (!newDb[tgl]) newDb[tgl] = [];
-            newDb[tgl].push({
-              pukul: formatTimeInput(r.pukul || ""), acara: r.acara || "", tempat: r.tempat || "",
-              asal: r.asal || "", pejabat: r.pejabat || "", delegasi: r.delegasi || "",
-              pendamping: r.pendamping || "-", keterangan: r.keterangan || "-",
-              susulan: r.susulan === "TRUE" || r.susulan === true, revisiItem: r.revisiItem === "TRUE" || r.revisiItem === true
-            });
-          });
-          saveDB(newDb);
-          loadDateData(currentISO);
-          showToast("Berhasil Sinkron dari Google Sheets ✓");
-        }
-      } catch (e) { console.error(e); }
+        const response = await fetch(SHEETDB_URL);
+        const data = await response.json();
+        
+        // Filter data berdasarkan tanggal yang dipilih
+        currentAgendas = data.filter(item => String(item.tanggal).split("T")[0] === currentISO);
+        renderTable();
+        showToast("Data berhasil dimuat ✓");
+      } catch (error) {
+        console.error("Gagal memuat:", error);
+        showToast("Gagal terhubung ke Google Sheets!");
+      }
     }
 
-    async function autoSaveToSheets() {
-      const db = getDB();
-      db[currentISO] = currentAgendas;
-      saveDB(db);
+    // Render tabel di layar
+    function renderTable() {
+      const tbody = document.getElementById("agendaTableBody");
+      tbody.innerHTML = "";
 
+      if (currentAgendas.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Belum ada agenda pada tanggal ini.</td></tr>`;
+        return;
+      }
+
+      currentAgendas.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50";
+        tr.innerHTML = `
+          <td class="p-3 text-center text-slate-500">${index + 1}</td>
+          <td class="p-3 font-medium text-slate-700">${item.pukul || "-"}</td>
+          <td class="p-3 text-slate-900">${item.acara || "-"}</td>
+          <td class="p-3 text-slate-600">${item.tempat || "-"}</td>
+          <td class="p-3 text-slate-600">${item.pejabat || "-"}</td>
+          <td class="p-3 text-center">
+            <button onclick="editAgenda(${index})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-pen"></i></button>
+            <button onclick="deleteAgenda(${index})" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Simpan atau Tambah Agenda baru
+    async function saveAgenda() {
+      const pukul = document.getElementById("inputPukul").value;
+      const acara = document.getElementById("inputAcara").value;
+      const tempat = document.getElementById("inputTempat").value;
+      const asal = document.getElementById("inputAsal").value;
+      const pejabat = document.getElementById("inputPejabat").value;
+
+      if (!acara && !pukul) {
+        alert("Minimal isi pukul atau acara kegiatan!");
+        return;
+      }
+
+      const newItem = {
+        tanggal: currentISO,
+        pukul: pukul,
+        acara: acara,
+        tempat: tempat,
+        asal: asal,
+        pejabat: pejabat,
+        delegasi: "",
+        pendamping: "",
+        keterangan: "",
+        susulan: false,
+        revisiItem: false,
+        photos: ""
+      };
+
+      if (editIndex >= 0) {
+        currentAgendas[editIndex] = newItem;
+        editIndex = -1;
+      } else {
+        currentAgendas.push(newItem);
+      }
+
+      clearForm();
+      renderTable();
+      await syncToCloud();
+    }
+
+    // Sinkronisasi penuh ke Google Sheets
+    async function syncToCloud() {
+      showToast("Menyimpan ke Google Sheets...");
       try {
-        fetch(SHEETDB_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "DELETE_BY_DATE", tanggal: currentISO }) });
+        // Hapus data tanggal ini di cloud terlebih dahulu agar tidak duplikat
+        await fetch(SHEETDB_URL, { 
+          method: "POST", 
+          mode: "no-cors", 
+          body: JSON.stringify({ action: "DELETE_BY_DATE", tanggal: currentISO }) 
+        });
+        
+        // Kirim ulang data yang aktif
         for (let item of currentAgendas) {
-          if (!item.acara && !item.pukul) continue;
-          fetch(SHEETDB_URL, {
-            method: "POST", mode: "no-cors",
-            body: JSON.stringify({ action: "APPEND", tanggal: currentISO, data: item })
+          await fetch(SHEETDB_URL, {
+            method: "POST", 
+            mode: "no-cors",
+            body: JSON.stringify({ 
+              action: "APPEND", 
+              tanggal: currentISO, 
+              data: item 
+            })
           });
         }
         showToast("Tersimpan otomatis ke Google Sheets ✓");
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error("Gagal sinkron:", e);
+        showToast("Gagal menyimpan ke cloud.");
+      }
     }
 
-    function showToast(msg) {
-      const t = document.getElementById("saveToast");
-      document.getElementById("toastText").innerText = msg;
-      t.classList.remove("hidden");
-      setTimeout(() => t.classList.add("hidden"), 2000);
+    // Edit Agenda
+    function editAgenda(index) {
+      const item = currentAgendas[index];
+      document.getElementById("inputPukul").value = item.pukul || "";
+      document.getElementById("inputAcara").value = item.acara || "";
+      document.getElementById("inputTempat").value = item.tempat || "";
+      document.getElementById("inputAsal").value = item.asal || "";
+      document.getElementById("inputPejabat").value = item.pejabat || "";
+      editIndex = index;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function onCalendarSelect(iso) { if (iso) loadDateData(iso); }
-    function handleNavShift(dir) { currentDateObj.setDate(currentDateObj.getDate() + dir); loadDateData(formatToISO(currentDateObj)); }
-    function updateHeaderManual(val) { document.getElementById("viewTanggal").innerText = val; }
-
-    function openAgendaModal(idx) {
-      const item = currentAgendas[idx];
-      document.getElementById("modalTitle").innerText = `Edit Agenda #${idx + 1}`;
-      document.getElementById("modalFormContent").innerHTML = `
-        <div class="space-y-2">
-          <div><label class="font-bold">Pukul:</label><input type="text" value="${item.pukul || ''}" oninput="currentAgendas[${idx}].pukul=formatTimeInput(this.value); renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border rounded-xl p-2"></div>
-          <div><label class="font-bold">Pejabat:</label><input type="text" value="${item.pejabat || ''}" oninput="currentAgendas[${idx}].pejabat=this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border rounded-xl p-2"></div>
-          <div><label class="font-bold">Acara:</label><textarea rows="2" oninput="currentAgendas[${idx}].acara=this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border rounded-xl p-2">${item.acara || ''}</textarea></div>
-          <div><label class="font-bold">Tempat:</label><input type="text" value="${item.tempat || ''}" oninput="currentAgendas[${idx}].tempat=this.value; renderPosterTable(); autoSaveToSheets();" class="w-full bg-slate-50 border rounded-xl p-2"></div>
-        </div>
-      `;
-      document.getElementById("agendaModal").classList.remove("hidden");
-    }
-    function closeAgendaModal() { document.getElementById("agendaModal").classList.add("hidden"); renderFormList(); }
-
-    function renderFormList() {
-      const c = document.getElementById("editListContainer"); c.innerHTML = "";
-      currentAgendas.forEach((item, idx) => {
-        c.innerHTML += `<div class="p-2 border rounded-xl flex justify-between items-center bg-slate-50 text-xs">
-          <span><b>${item.pukul || '00.00'}</b> - ${item.acara || 'Kosong'}</span>
-          <button onclick="openAgendaModal(${idx})" class="bg-teal-700 text-white px-2 py-1 rounded">Edit</button>
-        </div>`;
-      });
+    // Hapus Agenda
+    async function deleteAgenda(index) {
+      if (confirm("Yakin ingin menghapus agenda ini?")) {
+        currentAgendas.splice(index, 1);
+        renderTable();
+        await syncToCloud();
+      }
     }
 
-    function renderPosterTable() {
-      const s = document.getElementById("posterTableSection");
-      const valid = currentAgendas.filter(a => a.acara || a.pukul);
-      if (valid.length === 0) { s.innerHTML = `<div class="text-center py-6 text-xs text-slate-500">Nihil / Tidak Ada Agenda</div>`; return; }
-      let html = `<table class="w-full text-[8px] border-collapse"><thead><tr class="bg-[#004e54] text-white"><th>No</th><th>Pukul</th><th>Acara</th><th>Tempat</th><th>Pejabat</th></tr></thead><tbody>`;
-      valid.forEach((a, i) => {
-        html += `<tr class="border-b"><td>${i+1}</td><td>${a.pukul}</td><td>${a.acara}</td><td>${a.tempat}</td><td>${a.pejabat}</td></tr>`;
-      });
-      s.innerHTML = html + `</tbody></table>`;
+    // Bersihkan Form Input
+    function clearForm() {
+      document.getElementById("inputPukul").value = "";
+      document.getElementById("inputAcara").value = "";
+      document.getElementById("inputTempat").value = "";
+      document.getElementById("inputAsal").value = "";
+      document.getElementById("inputPejabat").value = "";
+      editIndex = -1;
     }
-
-    function addAgenda() {
-      currentAgendas.push({ pukul: "", acara: "", tempat: "", asal: "", pejabat: "", delegasi: "", pendamping: "-", keterangan: "-", susulan: false, revisiItem: false });
-      renderFormList(); autoSaveToSheets();
-    }
-
-    function renderWeeklyPoster() {}
-    function renderMonthlyPoster() {}
-    function renderPejabatReport() {}
-    async function downloadActivePoster() {
-      const canvas = await html2canvas(document.getElementById("posterHarian"), { scale: 3, useCORS: true });
-      const a = document.createElement("a"); a.download = "Jadwal.png"; a.href = canvas.toDataURL("image/png"); a.click();
-    }
-    function printPdfA4() { window.print(); }
-    function exportMonthlyExcel() {}
-    function sendToWhatsApp() {}
-    function sendSusulanToWhatsApp() {}
-    function sortAgendasByTime() {}
-
-    document.getElementById("posterHarian").classList.add("active-print-poster");
-    syncFromGoogleSheets();
   </script>
 </body>
 </html>
